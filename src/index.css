@@ -147,16 +147,16 @@
   }
   
   .btn-premium {
-    @apply bg-primary text-primary-foreground shadow-medium hover:bg-primary-dark transition-smooth hover:shadow-large;
+    @apply bg-primary text-primary-foreground shadow-medium hover:bg-primary-dark transition-all duration-300 ease-out hover:shadow-large;
   }
   
   .btn-ghost-premium {
-    @apply border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-smooth;
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 ease-out;
   }
 
   /* Premium Card Styles */
   .card-premium {
-    @apply bg-gradient-to-br from-card to-muted/30 shadow-soft hover:shadow-medium transition-smooth border-0;
+    @apply bg-gradient-to-br from-card to-muted/30 shadow-soft hover:shadow-medium transition-all duration-300 ease-out border-0;
   }
   
   .card-featured {
@@ -165,11 +165,11 @@
 
   /* Interactive Elements */
   .hover-lift {
-    @apply transition-smooth hover:scale-105 hover:shadow-medium;
+    @apply transition-all duration-300 ease-out hover:scale-105 hover:shadow-medium;
   }
   
   .hover-glow {
-    @apply transition-smooth hover:shadow-premium;
+    @apply transition-all duration-300 ease-out hover:shadow-premium;
   }
 
   /* Animations */
