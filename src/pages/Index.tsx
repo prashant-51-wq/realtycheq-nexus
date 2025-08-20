@@ -48,22 +48,22 @@ const Index = () => {
   const categories = [
     {
       name: 'Modern',
-      image: '/category-modern.jpg',
+      image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
       description: 'Contemporary designs with clean lines'
     },
     {
       name: 'Traditional',
-      image: '/category-traditional.jpg',
+      image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&h=300&fit=crop',
       description: 'Classic architectural styles'
     },
     {
       name: 'Luxury',
-      image: '/category-luxury.jpg',
+      image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop',
       description: 'Premium finishes and amenities'
     },
     {
       name: 'Sustainable',
-      image: '/category-sustainable.jpg',
+      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
       description: 'Eco-friendly and energy efficient'
     }
   ];
@@ -72,17 +72,17 @@ const Index = () => {
     {
       title: 'Smart Home Integration Rising',
       description: 'IoT-enabled properties seeing 40% higher demand',
-      image: '/trend-1.jpg'
+      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop'
     },
     {
       title: 'Sustainable Building Materials',
       description: 'Eco-friendly construction gaining momentum',
-      image: '/trend-2.jpg'
+      image: 'https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=600&h=400&fit=crop'
     },
     {
       title: 'Co-working Spaces in Residential',
       description: 'Work-from-home friendly designs trending',
-      image: '/trend-3.jpg'
+      image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop'
     }
   ];
 
@@ -162,9 +162,11 @@ const Index = () => {
             {categories.map((category, index) => (
               <Card key={index} className="card-premium hover-lift cursor-pointer">
                 <div className="aspect-[4/3] overflow-hidden rounded-t-2xl">
-                  <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                    <Palette className="h-16 w-16 text-primary" />
-                  </div>
+                  <img 
+                    src={category.image} 
+                    alt={category.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <CardContent className="p-4">
                   <h3 className="font-semibold mb-2">{category.name}</h3>
@@ -190,9 +192,11 @@ const Index = () => {
             {trends.map((trend, index) => (
               <Card key={index} className="card-premium hover-lift cursor-pointer">
                 <div className="aspect-[16/9] overflow-hidden rounded-t-2xl">
-                  <div className="w-full h-full bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
-                    <TrendingUp className="h-12 w-12 text-primary" />
-                  </div>
+                  <img 
+                    src={trend.image} 
+                    alt={trend.title}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <CardContent className="p-6">
                   <h3 className="font-semibold text-lg mb-2">{trend.title}</h3>

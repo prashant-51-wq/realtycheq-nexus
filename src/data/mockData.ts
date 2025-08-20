@@ -19,7 +19,7 @@ export const mockProperties: Property[] = [
       locality: 'Bandra West',
       microMarket: 'Waterfield Road'
     },
-    images: ['/property-1.jpg', '/property-1-2.jpg', '/property-1-3.jpg'],
+    images: ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop', 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop', 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop'],
     amenities: ['Swimming Pool', 'Gym', 'Security', 'Parking', 'Garden'],
     features: [
       { name: 'Furnished', value: true, category: 'basic' },
@@ -53,7 +53,7 @@ export const mockProperties: Property[] = [
       locality: 'Whitefield',
       microMarket: 'Varthur Road'
     },
-    images: ['/property-2.jpg', '/property-2-2.jpg'],
+    images: ['https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800&h=600&fit=crop', 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&h=600&fit=crop'],
     amenities: ['Private Garden', 'Parking', 'Security', 'Terrace'],
     features: [
       { name: 'Independent', value: true, category: 'basic' },
@@ -86,7 +86,7 @@ export const mockProperties: Property[] = [
       locality: 'Sector 54',
       microMarket: 'Golf Course Road'
     },
-    images: ['/property-3.jpg'],
+    images: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop'],
     amenities: ['Club House', 'Swimming Pool', 'Gym', 'Kids Play Area'],
     features: [
       { name: 'Ready to Move', value: true, category: 'basic' },
@@ -125,7 +125,7 @@ export const mockVendors: Vendor[] = [
         id: 'p1',
         title: '3BHK Villa Design',
         description: 'Modern villa with sustainable features',
-        images: ['/portfolio-1.jpg'],
+        images: ['https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop'],
         category: 'Residential',
         completedAt: '2023-12-15',
         budget: 1200000,
@@ -224,7 +224,7 @@ export const mockOpportunities: Opportunity[] = [
       'Quality materials',
       'Timely completion'
     ],
-    attachments: ['/floor-plan.pdf'],
+    attachments: [],
     createdBy: 'user1',
     createdAt: '2024-01-20',
     deadline: '2024-02-20',

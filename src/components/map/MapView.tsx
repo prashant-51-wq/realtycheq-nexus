@@ -104,8 +104,8 @@ export function MapView({ properties, selectedProperty, onPropertySelect }: MapV
               <div className="absolute top-10 left-1/2 transform -translate-x-1/2 z-30">
                 <Card className="w-64 shadow-large">
                   <CardContent className="p-3">
-                    <img
-                      src={property.images[0] || '/placeholder-property.jpg'}
+                  <img
+                      src={property.images[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop'}
                       alt={property.title}
                       className="w-full h-32 object-cover rounded-lg mb-2"
                     />
