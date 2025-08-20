@@ -297,18 +297,232 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Stats Section */}
       <section className="py-16 bg-primary-gradient text-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Trusted by Thousands</h2>
+            <p className="text-xl opacity-90">Real numbers from our growing community</p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-4xl font-bold mb-2">50K+</div>
+              <div className="opacity-90">Properties Listed</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold mb-2">25K+</div>
+              <div className="opacity-90">Happy Customers</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold mb-2">500+</div>
+              <div className="opacity-90">Verified Vendors</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold mb-2">₹2000Cr+</div>
+              <div className="opacity-90">Transactions Facilitated</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose RealtyCheq */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-headline mb-4">Why Choose RealtyCheq?</h2>
+            <p className="text-subheadline">
+              Experience the difference with India's most trusted real estate platform
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="font-semibold text-lg mb-3">100% Verified</h3>
+              <p className="text-muted-foreground">All properties and vendors undergo strict verification</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Clock className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="font-semibold text-lg mb-3">Lightning Fast</h3>
+              <p className="text-muted-foreground">Find and connect with the right people in minutes</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Star className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="font-semibold text-lg mb-3">Premium Quality</h3>
+              <p className="text-muted-foreground">Curated selection of high-quality properties and services</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="font-semibold text-lg mb-3">Community Driven</h3>
+              <p className="text-muted-foreground">Join thriving communities with DAO governance</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-headline mb-4">What Our Customers Say</h2>
+            <p className="text-subheadline">
+              Real experiences from real customers
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="card-premium">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-primary text-primary" />
+                  ))}
+                </div>
+                <p className="text-muted-foreground mb-4">
+                  "RealtyCheq made buying my dream home so easy. The verification process gave me complete confidence in my purchase."
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-3">
+                    <span className="text-white font-semibold">PK</span>
+                  </div>
+                  <div>
+                    <div className="font-semibold">Priya Kapoor</div>
+                    <div className="text-sm text-muted-foreground">Home Buyer, Mumbai</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="card-premium">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-primary text-primary" />
+                  ))}
+                </div>
+                <p className="text-muted-foreground mb-4">
+                  "As an architect, RealtyCheq has connected me with amazing clients. The platform's professionalism is unmatched."
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center mr-3">
+                    <span className="text-white font-semibold">RS</span>
+                  </div>
+                  <div>
+                    <div className="font-semibold">Rajesh Sharma</div>
+                    <div className="text-sm text-muted-foreground">Architect, Bangalore</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="card-premium">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-primary text-primary" />
+                  ))}
+                </div>
+                <p className="text-muted-foreground mb-4">
+                  "The community aspect is fantastic. I've learned so much from other investors and made some great connections."
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-warning rounded-full flex items-center justify-center mr-3">
+                    <span className="text-white font-semibold">AM</span>
+                  </div>
+                  <div>
+                    <div className="font-semibold">Anjali Mehta</div>
+                    <div className="text-sm text-muted-foreground">Property Investor, Delhi</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-headline mb-4">Frequently Asked Questions</h2>
+            <p className="text-subheadline">
+              Get answers to common questions about RealtyCheq
+            </p>
+          </div>
+          
+          <div className="max-w-3xl mx-auto space-y-6">
+            <Card className="card-premium">
+              <CardContent className="p-6">
+                <h3 className="font-semibold text-lg mb-3">How does property verification work?</h3>
+                <p className="text-muted-foreground">
+                  Our expert team conducts comprehensive verification including title checks, legal compliance, 
+                  and physical inspection to ensure every property meets our strict standards.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="card-premium">
+              <CardContent className="p-6">
+                <h3 className="font-semibold text-lg mb-3">What is RealtyCheq Choice?</h3>
+                <p className="text-muted-foreground">
+                  RealtyCheq Choice is our premium curation service featuring the best properties and vendors, 
+                  handpicked by our experts for exceptional quality and value.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="card-premium">
+              <CardContent className="p-6">
+                <h3 className="font-semibold text-lg mb-3">How do community features work?</h3>
+                <p className="text-muted-foreground">
+                  Join local property communities to participate in DAO governance, vote on proposals, 
+                  share opportunities, and connect with like-minded investors and owners.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="card-premium">
+              <CardContent className="p-6">
+                <h3 className="font-semibold text-lg mb-3">What are the membership benefits?</h3>
+                <p className="text-muted-foreground">
+                  Members get priority access to listings, reduced platform fees, exclusive opportunities, 
+                  dedicated support, and advanced tools for better decision making.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="py-16 bg-hero-gradient">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
-          <p className="text-xl mb-8 opacity-90">
+          <p className="text-xl mb-8 text-muted-foreground">
             Join thousands of satisfied customers on RealtyCheq
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Button variant="secondary" size="lg" className="bg-white text-primary hover:bg-gray-100">
+            <Button 
+              size="lg" 
+              className="btn-hero"
+              onClick={() => window.location.href = '/browse'}
+            >
               Browse Properties
             </Button>
-            <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary">
+            <Button 
+              variant="outline" 
+              size="lg"
+              onClick={() => window.location.href = '/list-property'}
+            >
               List Your Property
             </Button>
           </div>

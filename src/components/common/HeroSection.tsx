@@ -16,7 +16,8 @@ import {
   Building,
   Palette,
   Shield,
-  ArrowRight
+  ArrowRight,
+  Hammer
 } from 'lucide-react';
 
 const intentTabs = [
@@ -53,21 +54,52 @@ export function HeroSection() {
   });
 
   const handleSearch = () => {
-    // Navigate to browse with filters
-    const params = new URLSearchParams({
-      intent: activeIntent,
-      location: searchForm.location,
-      propertyType: searchForm.propertyType,
-      priceMin: (searchForm.priceRange[0] * 100000).toString(),
-      priceMax: (searchForm.priceRange[1] * 100000).toString(),
-      areaMin: searchForm.areaRange[0].toString(),
-      areaMax: searchForm.areaRange[1].toString(),
-      bedrooms: searchForm.bedrooms,
-      verified: searchForm.verified.toString(),
-      choice: searchForm.choice.toString()
-    });
+    // Create URL params for navigation
+    const params = new URLSearchParams();
     
-    window.location.href = `/browse?${params.toString()}`;
+    // Add all relevant filters
+    if (searchForm.location) params.set('location', searchForm.location);
+    if (searchForm.propertyType) params.set('propertyType', searchForm.propertyType);
+    if (searchForm.bedrooms && searchForm.bedrooms !== 'any') params.set('bedrooms', searchForm.bedrooms);
+    
+    // Add price range
+    params.set('priceMin', (searchForm.priceRange[0] * 100000).toString());
+    params.set('priceMax', (searchForm.priceRange[1] * 100000).toString());
+    
+    // Add area range
+    params.set('areaMin', searchForm.areaRange[0].toString());
+    params.set('areaMax', searchForm.areaRange[1].toString());
+    
+    // Add boolean filters
+    if (searchForm.verified) params.set('verified', 'true');
+    if (searchForm.choice) params.set('choice', 'true');
+    if (searchForm.financing) params.set('financing', 'true');
+    if (searchForm.design) params.set('design', 'true');
+    
+    // Navigate based on intent
+    let targetPath = '/browse';
+    if (activeIntent === 'sell') targetPath = '/list-property';
+    else if (activeIntent === 'design' || activeIntent === 'build' || activeIntent === 'renovate') targetPath = '/services';
+    else if (activeIntent === 'audit') targetPath = '/services?category=verification';
+    
+    window.location.href = `${targetPath}?${params.toString()}`;
+  };
+
+  const handleQuickAction = (action: string) => {
+    switch (action) {
+      case 'list':
+        window.location.href = '/list-property';
+        break;
+      case 'opportunity':
+        window.location.href = '/opportunities/new';
+        break;
+      case 'vendor':
+        window.location.href = '/vendors/join';
+        break;
+      case 'membership':
+        window.location.href = '/membership';
+        break;
+    }
   };
 
   return (
@@ -256,29 +288,183 @@ export function HeroSection() {
                 </div>
               </TabsContent>
 
-              {/* Other intent tabs would have similar but adapted forms */}
+              {/* Sell Intent */}
               <TabsContent value="sell" className="mt-0">
-                <div className="text-center space-y-4">
-                  <h3 className="text-xl font-semibold">List Your Property</h3>
-                  <p className="text-muted-foreground">
-                    Get maximum exposure and connect with verified buyers
-                  </p>
-                  <Button className="btn-hero">
+                <div className="space-y-6">
+                  <div className="text-center mb-6">
+                    <h3 className="text-xl font-semibold mb-2">List Your Property</h3>
+                    <p className="text-muted-foreground">
+                      Get maximum exposure and connect with verified buyers
+                    </p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Input placeholder="Property title" />
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Property Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {propertyTypes.map((type) => (
+                          <SelectItem key={type} value={type.toLowerCase()}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Input placeholder="Expected price (₹)" />
+                  </div>
+                  
+                  <Button className="btn-hero w-full" onClick={() => handleQuickAction('list')}>
                     <ArrowRight className="h-4 w-4 mr-2" />
-                    Start Listing
+                    Start Listing Process
                   </Button>
                 </div>
               </TabsContent>
 
-              <TabsContent value="design" className="mt-0">
-                <div className="text-center space-y-4">
-                  <h3 className="text-xl font-semibold">Find Design Professionals</h3>
-                  <p className="text-muted-foreground">
-                    Connect with verified architects and interior designers
-                  </p>
-                  <Button className="btn-hero">
+              {/* Rent Intent */}
+              <TabsContent value="rent" className="mt-0">
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input placeholder="City, locality..." className="pl-10 h-12" />
+                    </div>
+                    <Select>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="Rental Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="apartment">Apartment</SelectItem>
+                        <SelectItem value="house">House</SelectItem>
+                        <SelectItem value="pg">PG</SelectItem>
+                        <SelectItem value="office">Office</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input placeholder="Monthly budget (₹)" className="h-12" />
+                    <Button className="btn-hero h-12" onClick={handleSearch}>
+                      <Search className="h-5 w-5 mr-2" />
+                      Find Rentals
+                    </Button>
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* Build Intent */}
+              <TabsContent value="build" className="mt-0">
+                <div className="text-center space-y-6">
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Construction Services</h3>
+                    <p className="text-muted-foreground">
+                      Find trusted contractors and construction professionals
+                    </p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Button variant="outline" className="h-16 flex-col space-y-2">
+                      <Hammer className="h-6 w-6" />
+                      <span>Turnkey Construction</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex-col space-y-2">
+                      <Home className="h-6 w-6" />
+                      <span>House Construction</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex-col space-y-2">
+                      <Building className="h-6 w-6" />
+                      <span>Commercial Build</span>
+                    </Button>
+                  </div>
+                  
+                  <Button className="btn-hero" onClick={() => window.location.href = '/services?category=construction'}>
                     <ArrowRight className="h-4 w-4 mr-2" />
-                    Browse Services
+                    Browse Construction Services
+                  </Button>
+                </div>
+              </TabsContent>
+
+              {/* Design Intent */}
+              <TabsContent value="design" className="mt-0">
+                <div className="text-center space-y-6">
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Design Services</h3>
+                    <p className="text-muted-foreground">
+                      Connect with verified architects and interior designers
+                    </p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <Button variant="outline" className="h-16 flex-col space-y-2">
+                      <Palette className="h-6 w-6" />
+                      <span>2D Plans</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex-col space-y-2">
+                      <Palette className="h-6 w-6" />
+                      <span>3D Renders</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex-col space-y-2">
+                      <Palette className="h-6 w-6" />
+                      <span>Interior Design</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex-col space-y-2">
+                      <Palette className="h-6 w-6" />
+                      <span>Architecture</span>
+                    </Button>
+                  </div>
+                  
+                  <Button className="btn-hero" onClick={() => window.location.href = '/services?category=design'}>
+                    <ArrowRight className="h-4 w-4" />
+                    Browse Design Services
+                  </Button>
+                </div>
+              </TabsContent>
+
+              {/* Renovate Intent */}
+              <TabsContent value="renovate" className="mt-0">
+                <div className="text-center space-y-6">
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Renovation Services</h3>
+                    <p className="text-muted-foreground">
+                      Transform your space with professional renovation services
+                    </p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Input placeholder="What needs renovation?" />
+                    <Input placeholder="Budget range (₹)" />
+                    <Input placeholder="Timeline (months)" />
+                  </div>
+                  
+                  <Button className="btn-hero" onClick={() => handleQuickAction('opportunity')}>
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Post Renovation Project
+                  </Button>
+                </div>
+              </TabsContent>
+
+              {/* Audit Intent */}
+              <TabsContent value="audit" className="mt-0">
+                <div className="text-center space-y-6">
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Property Verification & Audit</h3>
+                    <p className="text-muted-foreground">
+                      Ensure property legitimacy with professional verification
+                    </p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Button variant="outline" className="h-16 flex-col space-y-2">
+                      <Shield className="h-6 w-6" />
+                      <span>Property Verification</span>
+                    </Button>
+                    <Button variant="outline" className="h-16 flex-col space-y-2">
+                      <Shield className="h-6 w-6" />
+                      <span>Construction Audit</span>
+                    </Button>
+                  </div>
+                  
+                  <Button className="btn-hero" onClick={() => window.location.href = '/services?category=verification'}>
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Book Verification
                   </Button>
                 </div>
               </TabsContent>
@@ -287,16 +473,32 @@ export function HeroSection() {
 
           {/* Quick Action CTAs */}
           <div className="flex flex-wrap justify-center gap-4 mt-8">
-            <Button variant="outline" className="btn-ghost-premium">
+            <Button 
+              variant="outline" 
+              className="btn-ghost-premium"
+              onClick={() => handleQuickAction('list')}
+            >
               List Property
             </Button>
-            <Button variant="outline" className="btn-ghost-premium">
+            <Button 
+              variant="outline" 
+              className="btn-ghost-premium"
+              onClick={() => handleQuickAction('opportunity')}
+            >
               Post Opportunity
             </Button>
-            <Button variant="outline" className="btn-ghost-premium">
+            <Button 
+              variant="outline" 
+              className="btn-ghost-premium"
+              onClick={() => handleQuickAction('vendor')}
+            >
               Join as Vendor
             </Button>
-            <Button variant="outline" className="btn-ghost-premium">
+            <Button 
+              variant="outline" 
+              className="btn-ghost-premium"
+              onClick={() => handleQuickAction('membership')}
+            >
               Buy Membership
             </Button>
           </div>
