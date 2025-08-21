@@ -7,6 +7,12 @@ import Index from "./pages/Index";
 import Browse from "./pages/Browse";
 import Services from "./pages/Services";
 import Communities from "./pages/Communities";
+import Opportunities from "./pages/Opportunities";
+import Vendors from "./pages/Vendors";
+import Choice from "./pages/Choice";
+import Learn from "./pages/Learn";
+import Membership from "./pages/Membership";
+import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,13 +29,13 @@ const App = () => (
           <Route path="/browse/:id" element={<div>Property Detail - Coming Soon</div>} />
           <Route path="/services" element={<Services />} />
           <Route path="/services/:slug" element={<div>Service Detail - Coming Soon</div>} />
-          <Route path="/opportunities" element={<div>Opportunities - Coming Soon</div>} />
-          <Route path="/vendors" element={<div>Vendors - Coming Soon</div>} />
-          <Route path="/choice" element={<div>RealtyCheq Choice - Coming Soon</div>} />
+          <Route path="/opportunities" element={<Opportunities />} />
+          <Route path="/vendors" element={<Vendors />} />
+          <Route path="/choice" element={<Choice />} />
           <Route path="/communities" element={<Communities />} />
-          <Route path="/membership" element={<div>Membership - Coming Soon</div>} />
-          <Route path="/learn" element={<div>Learn - Coming Soon</div>} />
-          <Route path="/dashboard" element={<div>Dashboard - Coming Soon</div>} />
+          <Route path="/membership" element={<Membership />} />
+          <Route path="/learn" element={<Learn />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
