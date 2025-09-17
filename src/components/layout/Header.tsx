@@ -79,12 +79,14 @@ export function Header() {
           <div className="flex items-center space-x-2">
             {/* Post/List Buttons */}
             <div className="hidden md:flex items-center space-x-2">
-              <Button variant="outline" size="sm" className="hidden lg:flex">
-                <Plus className="h-4 w-4 mr-2" />
-                List Property
+              <Button asChild variant="outline" size="sm" className="hidden lg:flex">
+                <Link to="/dashboard/listings/new">
+                  <Plus className="h-4 w-4 mr-2" />
+                  List Property
+                </Link>
               </Button>
-              <Button variant="default" size="sm" className="btn-premium">
-                Post Opportunity
+              <Button asChild variant="default" size="sm" className="btn-premium">
+                <Link to="/opportunities/new">Post Opportunity</Link>
               </Button>
             </div>
 
@@ -168,15 +170,17 @@ export function Header() {
 
                   {/* Mobile Actions */}
                   <div className="flex flex-col space-y-2 pt-4 border-t border-border">
-                    <Button className="w-full btn-premium">
-                      <Plus className="h-4 w-4 mr-2" />
-                      List Property
+                    <Button asChild className="w-full btn-premium">
+                      <Link to="/dashboard/listings/new">
+                        <Plus className="h-4 w-4 mr-2" />
+                        List Property
+                      </Link>
                     </Button>
-                    <Button variant="outline" className="w-full">
-                      Post Opportunity
+                    <Button asChild variant="outline" className="w-full">
+                      <Link to="/opportunities/new">Post Opportunity</Link>
                     </Button>
-                    <Button variant="outline" className="w-full">
-                      Join as Vendor
+                    <Button asChild variant="outline" className="w-full">
+                      <Link to="/vendors/onboard">Join as Vendor</Link>
                     </Button>
                   </div>
                 </div>
