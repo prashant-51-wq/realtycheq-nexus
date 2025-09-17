@@ -64,6 +64,9 @@ export function HeroSection() {
     if (searchForm.propertyType) params.set('propertyType', searchForm.propertyType);
     if (searchForm.bedrooms && searchForm.bedrooms !== 'any') params.set('bedrooms', searchForm.bedrooms);
     
+    // Add intent parameter for filtering
+    params.set('intent', activeIntent);
+    
     // Add price range
     params.set('priceMin', (searchForm.priceRange[0] * 100000).toString());
     params.set('priceMax', (searchForm.priceRange[1] * 100000).toString());
