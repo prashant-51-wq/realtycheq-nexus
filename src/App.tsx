@@ -9,7 +9,10 @@ import PropertyDetail from "./pages/PropertyDetail";
 import Services from "./pages/Services";
 import Communities from "./pages/Communities";
 import Opportunities from "./pages/Opportunities";
+import OpportunityNew from "./pages/OpportunityNew";
+import OpportunityDetail from "./pages/OpportunityDetail";
 import Vendors from "./pages/Vendors";
+import VendorDetail from "./pages/VendorDetail";
 import Choice from "./pages/Choice";
 import Learn from "./pages/Learn";
 import Membership from "./pages/Membership";
@@ -39,7 +42,10 @@ const App = () => (
           <Route path="/services" element={<Services />} />
           <Route path="/services/:slug" element={<div>Service Detail - Coming Soon</div>} />
           <Route path="/opportunities" element={<Opportunities />} />
+          <Route path="/opportunities/new" element={<OpportunityNew />} />
+          <Route path="/opportunities/:id" element={<OpportunityDetail />} />
           <Route path="/vendors" element={<Vendors />} />
+          <Route path="/vendors/:id" element={<VendorDetail />} />
           <Route path="/choice" element={<Choice />} />
           <Route path="/communities" element={<Communities />} />
           <Route path="/membership" element={<Membership />} />

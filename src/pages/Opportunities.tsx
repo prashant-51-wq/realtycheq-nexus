@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -30,6 +31,7 @@ const opportunityCategories = [
 ];
 
 export default function Opportunities() {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [savedOpportunities, setSavedOpportunities] = useState<Set<string>>(new Set());
@@ -210,7 +212,7 @@ export default function Opportunities() {
                       <Button className="flex-1 btn-premium">
                         Submit Proposal
                       </Button>
-                      <Button variant="outline">
+                      <Button variant="outline" onClick={() => navigate(`/opportunities/${opportunity.id}`)}>
                         View Details
                         <ArrowRight className="h-4 w-4 ml-2" />
                       </Button>
@@ -252,7 +254,7 @@ export default function Opportunities() {
                 Get proposals from verified vendors and professionals. 
                 Post your project requirements and receive competitive bids.
               </p>
-              <Button size="lg" className="btn-premium">
+              <Button size="lg" className="btn-premium" onClick={() => navigate('/opportunities/new')}>
                 Post New Opportunity
                 <ArrowRight className="h-5 w-5 ml-2" />
               </Button>

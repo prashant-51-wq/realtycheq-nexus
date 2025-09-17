@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -35,6 +36,7 @@ const vendorCategories = [
 ];
 
 export default function Vendors() {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [savedVendors, setSavedVendors] = useState<Set<string>>(new Set());
@@ -238,7 +240,7 @@ export default function Vendors() {
                         <MessageSquare className="h-4 w-4 mr-2" />
                         Contact
                       </Button>
-                      <Button variant="outline">
+                      <Button variant="outline" onClick={() => navigate(`/vendors/${vendor.id}`)}>
                         View Profile
                         <ExternalLink className="h-4 w-4 ml-2" />
                       </Button>
