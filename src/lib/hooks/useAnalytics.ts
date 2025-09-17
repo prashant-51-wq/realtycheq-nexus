@@ -13,7 +13,10 @@ export type AnalyticsEvent =
   | 'contact_vendor'
   | 'apply_filter'
   | 'apply_filters'
-  | 'switch_view_mode';
+  | 'switch_view_mode'
+  | 'view_opportunity'
+  | 'view_vendor'
+  | 'hire_vendor';
 
 interface AnalyticsEventData {
   [key: string]: string | number | boolean | undefined;
