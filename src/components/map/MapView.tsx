@@ -8,9 +8,10 @@ interface MapViewProps {
   properties: Property[];
   selectedProperty?: string;
   onPropertySelect?: (id: string) => void;
+  hoveredPropertyId?: string | null;
 }
 
-export function MapView({ properties, selectedProperty, onPropertySelect }: MapViewProps) {
+export function MapView({ properties, selectedProperty, onPropertySelect, hoveredPropertyId }: MapViewProps) {
   const [mapLoaded, setMapLoaded] = useState(false);
 
   useEffect(() => {

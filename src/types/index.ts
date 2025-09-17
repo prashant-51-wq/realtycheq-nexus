@@ -305,6 +305,8 @@ export interface SearchFilters {
   isChoice?: boolean;
   newListings?: boolean;
   daysOnMarket?: number;
+  financing?: boolean;
+  design?: boolean;
 }
 
 export interface SearchResults<T> {

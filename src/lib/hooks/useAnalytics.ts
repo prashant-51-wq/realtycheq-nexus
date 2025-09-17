@@ -12,6 +12,7 @@ export type AnalyticsEvent =
   | 'schedule_visit'
   | 'contact_vendor'
   | 'apply_filter'
+  | 'apply_filters'
   | 'switch_view_mode';
 
 interface AnalyticsEventData {

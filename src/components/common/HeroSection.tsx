@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -39,6 +40,7 @@ const cities = [
 ];
 
 export function HeroSection() {
+  const navigate = useNavigate();
   const [activeIntent, setActiveIntent] = useState('buy');
   const [searchForm, setSearchForm] = useState({
     location: '',
@@ -81,23 +83,24 @@ export function HeroSection() {
     if (activeIntent === 'sell') targetPath = '/list-property';
     else if (activeIntent === 'design' || activeIntent === 'build' || activeIntent === 'renovate') targetPath = '/services';
     else if (activeIntent === 'audit') targetPath = '/services?category=verification';
+    else if (activeIntent === 'rent') targetPath = '/browse'; // Rental properties also go to browse
     
-    window.location.href = `${targetPath}?${params.toString()}`;
+    navigate(`${targetPath}?${params.toString()}`);
   };
 
   const handleQuickAction = (action: string) => {
     switch (action) {
       case 'list':
-        window.location.href = '/list-property';
+        navigate('/list-property');
         break;
       case 'opportunity':
-        window.location.href = '/opportunities/new';
+        navigate('/opportunities/new');
         break;
       case 'vendor':
-        window.location.href = '/vendors/join';
+        navigate('/vendors/join');
         break;
       case 'membership':
-        window.location.href = '/membership';
+        navigate('/membership');
         break;
     }
   };

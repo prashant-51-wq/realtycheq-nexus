@@ -13,6 +13,9 @@ interface PropertyCardProps {
   saved?: boolean;
   compact?: boolean;
   isCompared?: boolean;
+  isHovered?: boolean;
+  onHover?: () => void;
+  onHoverEnd?: () => void;
 }
 
 export function PropertyCard({ 
@@ -22,7 +25,10 @@ export function PropertyCard({
   onCompare, 
   saved = false,
   compact = false,
-  isCompared = false
+  isCompared = false,
+  isHovered = false,
+  onHover,
+  onHoverEnd
 }: PropertyCardProps) {
 
   const handleCardClick = () => {
@@ -30,7 +36,14 @@ export function PropertyCard({
   };
 
   return (
-    <Card className="card-premium hover-lift cursor-pointer group overflow-hidden">
+    <Card 
+      className={`card-premium hover-lift cursor-pointer group overflow-hidden transition-all duration-200 ${
+        isHovered ? 'ring-2 ring-primary scale-105' : ''
+      }`} 
+      onClick={handleCardClick}
+      onMouseEnter={onHover}
+      onMouseLeave={onHoverEnd}
+    >
       <div className="relative">
         {/* Image */}
         <div className="aspect-[4/3] overflow-hidden rounded-t-2xl">
