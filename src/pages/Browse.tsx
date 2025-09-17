@@ -1,19 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PropertyCard } from '@/components/cards/PropertyCard';
 import { SmartFilter } from '@/components/filters/SmartFilter';
 import { MapView } from '@/components/map/MapView';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Map, List, Filter } from 'lucide-react';
+import { Map, List, Filter, Bookmark } from 'lucide-react';
 import { mockProperties } from '@/data/mockData';
 import { SearchFilters, Property } from '@/types';
+import { useAnalytics } from '@/lib/hooks/useAnalytics';
+import { formatPrice } from '@/lib/utils/currency';
+import { 
+  getSavedProperties, 
+  saveProperty, 
+  removeSavedProperty,
+  addToComparison,
+  removeFromComparison,
+  isInComparison 
+} from '@/lib/utils/storage';
 
 export default function Browse() {
+  const { track } = useAnalytics();
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [filters, setFilters] = useState<SearchFilters>({});
   const [filteredProperties, setFilteredProperties] = useState<Property[]>(mockProperties);
   const [savedProperties, setSavedProperties] = useState<Set<string>>(new Set());
+  const [hoveredProperty, setHoveredProperty] = useState<string | null>(null);
+  const [comparedProperties, setComparedProperties] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    // Load saved properties from localStorage
+    const saved = getSavedProperties();
+    setSavedProperties(new Set(saved));
+    
+    // Track page view
+    track('view_listing', { page: 'browse', filterCount: Object.keys(filters).length });
+  }, []);
 
   const handleFilterChange = (newFilters: SearchFilters) => {
     setFilters(newFilters);
@@ -49,11 +71,14 @@ export default function Browse() {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
         newSet.delete(id);
+        removeSavedProperty(id);
       } else {
         newSet.add(id);
+        saveProperty(id);
       }
       return newSet;
     });
+    track('save_property', { propertyId: id });
   };
 
   const handleViewProperty = (id: string) => {
@@ -62,8 +87,27 @@ export default function Browse() {
   };
 
   const handleCompareProperty = (id: string) => {
-    // Add to comparison
-    console.log('Compare property:', id);
+    if (isInComparison(id)) {
+      removeFromComparison(id);
+      setComparedProperties(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(id);
+        return newSet;
+      });
+    } else {
+      if (comparedProperties.size >= 4) {
+        alert('You can only compare up to 4 properties');
+        return;
+      }
+      addToComparison(id);
+      setComparedProperties(prev => new Set([...prev, id]));
+    }
+    track('add_to_compare', { propertyId: id });
+  };
+
+  const handleViewModeChange = (mode: 'list' | 'map') => {
+    setViewMode(mode);
+    track('switch_view_mode', { mode });
   };
 
   return (
@@ -84,7 +128,7 @@ export default function Browse() {
                 <Button
                   variant={viewMode === 'list' ? 'default' : 'outline'}
                   size="sm"
-                  onClick={() => setViewMode('list')}
+                  onClick={() => handleViewModeChange('list')}
                 >
                   <List className="h-4 w-4 mr-2" />
                   List
@@ -92,7 +136,7 @@ export default function Browse() {
                 <Button
                   variant={viewMode === 'map' ? 'default' : 'outline'}
                   size="sm"
-                  onClick={() => setViewMode('map')}
+                  onClick={() => handleViewModeChange('map')}
                 >
                   <Map className="h-4 w-4 mr-2" />
                   Map
@@ -118,8 +162,7 @@ export default function Browse() {
                 )}
                 {filters.priceRange && (
                   <Badge variant="secondary">
-                    ₹{(filters.priceRange.min / 100000).toFixed(1)}L - 
-                    ₹{(filters.priceRange.max / 10000000).toFixed(1)}Cr
+                    {formatPrice(filters.priceRange.min)} - {formatPrice(filters.priceRange.max)}
                   </Badge>
                 )}
                 <Button
@@ -140,36 +183,65 @@ export default function Browse() {
 
       {/* Content */}
       <div className="container mx-auto px-4 py-6">
+        {/* Comparison Bar */}
+        {comparedProperties.size > 0 && (
+          <div className="fixed bottom-4 right-4 bg-primary text-primary-foreground rounded-2xl p-4 shadow-large z-50">
+            <div className="flex items-center space-x-3">
+              <Bookmark className="h-5 w-5" />
+              <span className="font-medium">{comparedProperties.size} properties to compare</span>
+              <Button variant="secondary" size="sm">
+                Compare Now
+              </Button>
+            </div>
+          </div>
+        )}
+
         {viewMode === 'list' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProperties.map((property) => (
-              <PropertyCard
+              <div
                 key={property.id}
-                property={property}
-                saved={savedProperties.has(property.id)}
-                onSave={handleSaveProperty}
-                onView={handleViewProperty}
-                onCompare={handleCompareProperty}
-              />
+                onMouseEnter={() => setHoveredProperty(property.id)}
+                onMouseLeave={() => setHoveredProperty(null)}
+              >
+                <PropertyCard
+                  property={property}
+                  saved={savedProperties.has(property.id)}
+                  onSave={handleSaveProperty}
+                  onView={handleViewProperty}
+                  onCompare={handleCompareProperty}
+                  isCompared={comparedProperties.has(property.id)}
+                />
+              </div>
             ))}
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[600px]">
             <div className="space-y-4 overflow-y-auto">
               {filteredProperties.map((property) => (
-                <PropertyCard
+                <div
                   key={property.id}
-                  property={property}
-                  saved={savedProperties.has(property.id)}
-                  onSave={handleSaveProperty}
-                  onView={handleViewProperty}
-                  onCompare={handleCompareProperty}
-                  compact
-                />
+                  onMouseEnter={() => setHoveredProperty(property.id)}
+                  onMouseLeave={() => setHoveredProperty(null)}
+                >
+                  <PropertyCard
+                    property={property}
+                    saved={savedProperties.has(property.id)}
+                    onSave={handleSaveProperty}
+                    onView={handleViewProperty}
+                    onCompare={handleCompareProperty}
+                    isCompared={comparedProperties.has(property.id)}
+                    compact
+                  />
+                </div>
               ))}
             </div>
             <div className="rounded-2xl overflow-hidden">
-              <MapView properties={filteredProperties} />
+              <MapView 
+                properties={filteredProperties} 
+                selectedProperty={hoveredProperty}
+                onPropertySelect={setHoveredProperty}
+              />
             </div>
           </div>
         )}

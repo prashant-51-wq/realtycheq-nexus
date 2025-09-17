@@ -1,8 +1,9 @@
-import { Heart, Eye, MapPin, Calendar, Camera, Verified, Star } from 'lucide-react';
+import { Heart, Eye, MapPin, Calendar, Camera, Verified, Star, Plus, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Property } from '@/types';
+import { formatPrice, formatArea } from '@/lib/utils/currency';
 
 interface PropertyCardProps {
   property: Property;
@@ -11,6 +12,7 @@ interface PropertyCardProps {
   onCompare?: (id: string) => void;
   saved?: boolean;
   compact?: boolean;
+  isCompared?: boolean;
 }
 
 export function PropertyCard({ 
@@ -19,16 +21,9 @@ export function PropertyCard({
   onView, 
   onCompare, 
   saved = false,
-  compact = false 
+  compact = false,
+  isCompared = false
 }: PropertyCardProps) {
-  const formatPrice = (price: number) => {
-    if (price >= 10000000) {
-      return `₹${(price / 10000000).toFixed(1)}Cr`;
-    } else if (price >= 100000) {
-      return `₹${(price / 100000).toFixed(1)}L`;
-    }
-    return `₹${price.toLocaleString()}`;
-  };
 
   const handleCardClick = () => {
     onView?.(property.id);
@@ -117,7 +112,7 @@ export function PropertyCard({
                   {property.bedrooms} BHK
                 </span>
                 <span className="text-muted-foreground">
-                  {property.area} sqft
+                  {formatArea(property.area)}
                 </span>
                 <span className="text-muted-foreground capitalize">
                   {property.type}
@@ -140,7 +135,7 @@ export function PropertyCard({
 
               <div className="flex items-center space-x-2">
                 <Button
-                  variant="outline"
+                  variant={isCompared ? "default" : "outline"}
                   size="sm"
                   className="text-xs"
                   onClick={(e) => {
@@ -148,7 +143,17 @@ export function PropertyCard({
                     onCompare?.(property.id);
                   }}
                 >
-                  Compare
+                  {isCompared ? (
+                    <>
+                      <Check className="h-3 w-3 mr-1" />
+                      Added
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="h-3 w-3 mr-1" />
+                      Compare
+                    </>
+                  )}
                 </Button>
                 <Button
                   className="btn-premium text-xs"

@@ -47,6 +47,7 @@ export interface Property {
   views: number;
   saves: number;
   daysOnMarket: number;
+  yearBuilt?: number;
 }
 
 export type PropertyType = 
