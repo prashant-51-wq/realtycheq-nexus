@@ -1,5 +1,6 @@
 import { PropertyCard } from '@/components/cards/PropertyCard';
 import { HeroSection } from '@/components/common/HeroSection';
+import { QuickActions } from '@/components/common/QuickActions';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,6 +21,7 @@ import {
 } from 'lucide-react';
 import { mockProperties, mockMembershipPlans } from '@/data/mockData';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import heroImage from '@/assets/hero-property.jpg';
 
 const Index = () => {
@@ -116,6 +118,9 @@ const Index = () => {
       {/* Hero Section */}
       <HeroSection />
 
+      {/* Quick Actions */}
+      <QuickActions />
+
       {/* Featured Properties */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
@@ -140,9 +145,11 @@ const Index = () => {
           </div>
 
           <div className="text-center">
-            <Button className="btn-premium">
-              View All Properties
-              <ArrowRight className="h-4 w-4 ml-2" />
+            <Button className="btn-premium" asChild>
+              <Link to="/browse">
+                View All Properties
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Link>
             </Button>
           </div>
         </div>

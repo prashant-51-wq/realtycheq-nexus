@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,7 +18,10 @@ import {
   TrendingUp,
   Building2,
   Hammer,
-  PaintBucket
+  PaintBucket,
+  ArrowLeft,
+  Home,
+  BriefcaseIcon as Briefcase
 } from 'lucide-react';
 import { mockOpportunities } from '@/data/mockData';
 
@@ -68,14 +71,32 @@ export default function Opportunities() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Navigation */}
+      <div className="container mx-auto px-4 py-6">
+        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-4">
+          <Link to="/" className="hover:text-primary flex items-center">
+            <Home className="h-3 w-3 mr-1" />
+            Home
+          </Link>
+          <span>/</span>
+          <span className="text-foreground">Investment Opportunities</span>
+        </nav>
+        <Link to="/" className="inline-flex items-center text-primary hover:text-primary/80 mb-6">
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Home
+        </Link>
+      </div>
+
       {/* Hero Section */}
       <div className="bg-hero-gradient border-b border-border">
         <div className="container mx-auto px-4 py-12">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-display mb-4">Project Opportunities</h1>
+            <h1 className="text-display mb-4 flex items-center justify-center">
+              <Briefcase className="h-12 w-12 mr-4 text-white" />
+              Investment Opportunities
+            </h1>
             <p className="text-subheadline mb-8">
-              Discover lucrative real estate projects and connect with property owners 
-              looking for trusted professionals
+              Discover curated real estate investment opportunities with verified returns and transparent data
             </p>
             
             {/* Search Bar */}

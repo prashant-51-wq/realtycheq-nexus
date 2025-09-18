@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,7 +12,10 @@ import {
   Clock,
   Star,
   ArrowRight,
-  CheckCircle
+  CheckCircle,
+  ArrowLeft,
+  Home,
+  Briefcase
 } from 'lucide-react';
 import { mockServicePackages } from '@/data/mockData';
 
@@ -52,11 +56,30 @@ export default function Services() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Navigation */}
+      <div className="container mx-auto px-4 py-6">
+        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-4">
+          <Link to="/" className="hover:text-primary flex items-center">
+            <Home className="h-3 w-3 mr-1" />
+            Home
+          </Link>
+          <span>/</span>
+          <span className="text-foreground">Services</span>
+        </nav>
+        <Link to="/" className="inline-flex items-center text-primary hover:text-primary/80 mb-6">
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Home
+        </Link>
+      </div>
+
       {/* Hero Section */}
       <div className="bg-hero-gradient border-b border-border">
         <div className="container mx-auto px-4 py-12">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-display mb-4">Professional Real Estate Services</h1>
+            <h1 className="text-display mb-4 flex items-center justify-center">
+              <Briefcase className="h-12 w-12 mr-4 text-white" />
+              Professional Real Estate Services
+            </h1>
             <p className="text-subheadline mb-8">
               From design to construction to verification - find trusted professionals 
               for every aspect of your real estate journey

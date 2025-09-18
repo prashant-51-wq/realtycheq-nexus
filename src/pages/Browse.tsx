@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { PropertyCard } from '@/components/cards/PropertyCard';
 import { SmartFilter } from '@/components/filters/SmartFilter';
 import { MapView } from '@/components/map/MapView';
@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
-import { Map, List, Filter, Bookmark } from 'lucide-react';
+import { Map, List, Filter, Bookmark, ArrowLeft, Home, Search } from 'lucide-react';
 import { mockProperties } from '@/data/mockData';
 import { SearchFilters, Property, PropertyType } from '@/types';
 import { useAnalytics } from '@/lib/hooks/useAnalytics';
@@ -247,12 +247,31 @@ export default function Browse() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Navigation */}
+      <div className="container mx-auto px-4 py-6">
+        <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-4">
+          <Link to="/" className="hover:text-primary flex items-center">
+            <Home className="h-3 w-3 mr-1" />
+            Home
+          </Link>
+          <span>/</span>
+          <span className="text-foreground">Browse Properties</span>
+        </nav>
+        <Link to="/" className="inline-flex items-center text-primary hover:text-primary/80 mb-6">
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Home
+        </Link>
+      </div>
+
       {/* Header */}
       <div className="border-b border-border">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold mb-2">Browse Properties</h1>
+              <h1 className="text-3xl font-bold mb-2 flex items-center">
+                <Search className="h-8 w-8 mr-3 text-primary" />
+                Browse Properties
+              </h1>
               <p className="text-muted-foreground">
                 {isLoading ? 'Loading...' : `${filteredProperties.length} properties found`}
               </p>
