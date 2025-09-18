@@ -93,9 +93,9 @@ export default function PropertyDetail() {
             locality: data.locality,
             microMarket: data.micro_market
           },
-        images: prop.images || [],
-        amenities: prop.amenities || [],
-        features: Array.isArray(prop.features) ? prop.features : [],
+        images: data.images || [],
+        amenities: data.amenities || [],
+        features: Array.isArray(data.features) ? data.features as any[] : [],
           listingDate: data.created_at,
           status: data.status,
           verified: data.verified,

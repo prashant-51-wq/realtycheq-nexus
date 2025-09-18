@@ -177,7 +177,7 @@ export default function Browse() {
         },
         images: prop.images || [],
         amenities: prop.amenities || [],
-        features: Array.isArray(prop.features) ? prop.features : [],
+        features: Array.isArray(prop.features) ? prop.features as any[] : [],
         listingDate: prop.created_at,
         status: prop.status,
         verified: prop.verified,

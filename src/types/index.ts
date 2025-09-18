@@ -39,7 +39,7 @@ export interface Property {
   amenities: string[];
   features: PropertyFeature[];
   listingDate: string;
-  status: 'active' | 'sold' | 'off-market';
+  status: 'active' | 'sold' | 'off-market' | 'draft';
   verified: boolean;
   isChoice: boolean;
   ownerId: string;
