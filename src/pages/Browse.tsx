@@ -9,13 +9,13 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/hooks/use-toast';
 import { Map, List, Filter, Bookmark, ArrowLeft, Home, Search } from 'lucide-react';
-import { mockProperties } from '@/data/mockData';
+import { supabase } from '@/integrations/supabase/client';
 import { SearchFilters, Property, PropertyType } from '@/types';
 import { useAnalytics } from '@/lib/hooks/useAnalytics';
 import { formatPrice } from '@/lib/utils/currency';
 import { 
   getSavedProperties, 
-  saveProperty, 
+  saveProperty as savePropertyToStorage, 
   removeSavedProperty,
   addToComparison,
   removeFromComparison,
@@ -29,6 +29,7 @@ export default function Browse() {
   
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [filters, setFilters] = useState<SearchFilters>({});
+  const [properties, setProperties] = useState<Property[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<Property[]>([]);
   const [savedProperties, setSavedProperties] = useState<Set<string>>(new Set());
   const [hoveredProperty, setHoveredProperty] = useState<string | null>(null);
@@ -107,22 +108,17 @@ export default function Browse() {
     const urlFilters = parseFiltersFromURL();
     setFilters(urlFilters);
     
-    // Load saved properties from localStorage
-    const saved = getSavedProperties();
-    setSavedProperties(new Set(saved));
-    
-    // Simulate loading delay
-    setTimeout(() => {
-      applyFiltersToProperties(urlFilters);
-      setIsLoading(false);
-      
-      // Show toast if filters were applied from URL
+    // Load properties and saved properties
+    Promise.all([
+      fetchProperties(),
+      loadSavedProperties()
+    ]).then(() => {
       const hasFilters = Object.keys(urlFilters).length > 0;
       if (hasFilters) {
         const filterCount = Object.keys(urlFilters).length;
         toast({
           title: "Filters Applied",
-          description: `Found ${mockProperties.length} properties with ${filterCount} filter${filterCount > 1 ? 's' : ''} applied.`,
+          description: `Properties loaded with ${filterCount} filter${filterCount > 1 ? 's' : ''} applied.`,
         });
       }
       
@@ -132,17 +128,91 @@ export default function Browse() {
         filterCount: Object.keys(urlFilters).length,
         hasURLFilters: hasFilters
       });
-    }, 800);
+    });
   }, [searchParams]);
 
+  useEffect(() => {
+    if (properties.length > 0) {
+      applyFiltersToProperties(filters);
+      setIsLoading(false);
+    }
+  }, [properties, filters]);
+
+  const fetchProperties = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching properties:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to load properties. Please try again.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      // Transform Supabase data to match Property interface
+      const transformedProperties = data?.map(prop => ({
+        id: prop.id,
+        title: prop.title,
+        description: prop.description,
+        type: prop.property_type,
+        price: prop.price,
+        area: prop.area,
+        bedrooms: prop.bedrooms,
+        bathrooms: prop.bathrooms,
+        location: {
+          address: prop.address,
+          city: prop.city,
+          state: prop.state,
+          pincode: prop.pincode,
+          coordinates: { lat: prop.latitude, lng: prop.longitude },
+          locality: prop.locality,
+          microMarket: prop.micro_market
+        },
+        images: prop.images || [],
+        amenities: prop.amenities || [],
+        features: Array.isArray(prop.features) ? prop.features : [],
+        listingDate: prop.created_at,
+        status: prop.status,
+        verified: prop.verified,
+        isChoice: prop.is_choice,
+        ownerId: prop.seller_id,
+        views: prop.views,
+        saves: prop.saves,
+        yearBuilt: prop.year_built,
+        daysOnMarket: Math.floor((new Date().getTime() - new Date(prop.created_at).getTime()) / (1000 * 60 * 60 * 24))
+      })) || [];
+
+      setProperties(transformedProperties);
+    } catch (error) {
+      console.error('Error fetching properties:', error);
+      toast({
+        title: 'Error',
+        description: 'An unexpected error occurred while loading properties.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const loadSavedProperties = async () => {
+    const saved = getSavedProperties();
+    setSavedProperties(new Set(saved));
+  };
+
   const applyFiltersToProperties = (filtersToApply: SearchFilters) => {
-    let filtered = [...mockProperties];
+    let filtered = [...properties];
     
     if (filtersToApply.location) {
       filtered = filtered.filter(p => 
         p.location.city.toLowerCase().includes(filtersToApply.location!.toLowerCase()) ||
         p.location.address.toLowerCase().includes(filtersToApply.location!.toLowerCase()) ||
-        p.location.locality.toLowerCase().includes(filtersToApply.location!.toLowerCase())
+        (p.location.locality && p.location.locality.toLowerCase().includes(filtersToApply.location!.toLowerCase()))
       );
     }
     
@@ -205,7 +275,7 @@ export default function Browse() {
         removeSavedProperty(id);
       } else {
         newSet.add(id);
-        saveProperty(id);
+        savePropertyToStorage(id);
       }
       return newSet;
     });
@@ -214,7 +284,7 @@ export default function Browse() {
 
   const handleViewProperty = (id: string) => {
     // Navigate to property detail
-    window.location.href = `/browse/${id}`;
+    window.location.href = `/property/${id}`;
   };
 
   const handleCompareProperty = (id: string) => {

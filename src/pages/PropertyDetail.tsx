@@ -14,34 +14,124 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
-import { mockProperties } from '@/data/mockData';
+import { supabase } from '@/integrations/supabase/client';
 import { formatPrice, formatArea, calculateEMI } from '@/lib/utils/currency';
 import { useAnalytics } from '@/lib/hooks/useAnalytics';
 import { isPropertySaved, saveProperty, removeSavedProperty } from '@/lib/utils/storage';
+import { PropertyImageCarousel } from '@/components/property/PropertyImageCarousel';
 
 export default function PropertyDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { track } = useAnalytics();
-  const [property, setProperty] = useState(mockProperties.find(p => p.id === id));
+  const [property, setProperty] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [saved, setSaved] = useState(false);
   const [showMortgageCalc, setShowMortgageCalc] = useState(false);
-  const [loanAmount, setLoanAmount] = useState(property?.price ? property.price * 0.8 : 0);
+  const [loanAmount, setLoanAmount] = useState(0);
   const [interestRate, setInterestRate] = useState(8.5);
   const [tenure, setTenure] = useState(240); // 20 years in months
 
   useEffect(() => {
+    fetchProperty();
+  }, [id]);
+
+  useEffect(() => {
     if (property) {
       setSaved(isPropertySaved(property.id));
+      setLoanAmount(property.price ? property.price * 0.8 : 0);
       track('view_listing', { 
         propertyId: property.id, 
         price: property.price,
         type: property.type,
         location: property.location.city 
       });
+      
+      // Update property views
+      updatePropertyViews();
     }
   }, [property, track]);
+
+  const fetchProperty = async () => {
+    if (!id) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching property:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to load property details.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      if (data) {
+        // Transform Supabase data to match Property interface
+        const transformedProperty = {
+          id: data.id,
+          title: data.title,
+          description: data.description,
+          type: data.property_type,
+          price: data.price,
+          area: data.area,
+          bedrooms: data.bedrooms,
+          bathrooms: data.bathrooms,
+          location: {
+            address: data.address,
+            city: data.city,
+            state: data.state,
+            pincode: data.pincode,
+            coordinates: { lat: data.latitude, lng: data.longitude },
+            locality: data.locality,
+            microMarket: data.micro_market
+          },
+        images: prop.images || [],
+        amenities: prop.amenities || [],
+        features: Array.isArray(prop.features) ? prop.features : [],
+          listingDate: data.created_at,
+          status: data.status,
+          verified: data.verified,
+          isChoice: data.is_choice,
+          ownerId: data.seller_id,
+          views: data.views,
+          saves: data.saves,
+          yearBuilt: data.year_built
+        };
+        
+        setProperty(transformedProperty);
+      }
+    } catch (error) {
+      console.error('Error fetching property:', error);
+      toast({
+        title: 'Error',
+        description: 'An unexpected error occurred while loading property details.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updatePropertyViews = async () => {
+    if (!property) return;
+    
+    try {
+      await supabase
+        .from('properties')
+        .update({ views: (property.views || 0) + 1 })
+        .eq('id', property.id);
+    } catch (error) {
+      console.error('Error updating property views:', error);
+    }
+  };
 
   const handleSave = () => {
     if (!property) return;
@@ -73,6 +163,14 @@ export default function PropertyDetail() {
       description: 'Our team will verify this property within 3-5 business days.' 
     });
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   if (!property) {
     return (
@@ -119,42 +217,41 @@ export default function PropertyDetail() {
       </div>
 
       {/* Image Gallery */}
-      <div className="relative h-[60vh] bg-muted">
-        <img
-          src={property.images[currentImageIndex] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&h=800&fit=crop'}
-          alt={property.title}
-          className="w-full h-full object-cover"
+      <div className="relative h-[60vh] bg-muted overflow-hidden">
+        <PropertyImageCarousel 
+          images={property.images || []}
+          title={property.title}
+          className="h-full"
         />
-        
-        {/* Image Navigation */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-          <div className="flex space-x-2">
-            {property.images.slice(0, 5).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentImageIndex(index)}
-                className={`w-3 h-3 rounded-full ${
-                  currentImageIndex === index ? 'bg-white' : 'bg-white/50'
-                }`}
-              />
-            ))}
-          </div>
-        </div>
 
         {/* Badges */}
-        <div className="absolute top-4 left-4 flex space-x-2">
+        <div className="absolute top-4 left-4 flex space-x-2 z-10">
           {property.verified && (
-            <Badge className="badge-verified">
+            <Badge className="badge-verified shadow-soft">
               <Shield className="h-3 w-3 mr-1" />
               Verified
             </Badge>
           )}
           {property.isChoice && (
-            <Badge className="badge-choice">
+            <Badge className="badge-choice shadow-soft">
               <Award className="h-3 w-3 mr-1" />
               RealtyCheq Choice
             </Badge>
           )}
+        </div>
+
+        {/* Quick Stats Overlay */}
+        <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-sm text-white px-4 py-2 rounded-lg">
+          <div className="flex items-center space-x-4 text-sm">
+            <span className="flex items-center">
+              <Eye className="h-4 w-4 mr-1" />
+              {property.views || 0} views
+            </span>
+            <span className="flex items-center">
+              <Heart className="h-4 w-4 mr-1" />
+              {property.saves || 0} saves
+            </span>
+          </div>
         </div>
       </div>
 
