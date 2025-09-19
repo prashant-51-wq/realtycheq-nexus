@@ -52,27 +52,27 @@ export default function Vendors() {
 
   const fetchVendors = async () => {
     try {
+      // Use the business_directory view for secure public vendor discovery
       const { data, error } = await supabase
-        .from('profiles')
+        .from('business_directory')
         .select('*')
-        .in('role', ['vendor', 'contractor'] as any)
-        .eq('verified', true);
+        .order('rating', { ascending: false });
 
       if (error) throw error;
       
       // Transform data to match vendor format
-      const transformedVendors = data?.map(profile => ({
-        id: profile.user_id,
-        name: profile.name,
-        type: profile.role,
-        verified: profile.verified,
-        rating: profile.rating || 4.5,
+      const transformedVendors = data?.map(vendor => ({
+        id: vendor.user_id,
+        name: vendor.name,
+        type: vendor.role,
+        verified: vendor.verified,
+        rating: vendor.rating || 4.5,
         location: {
-          city: profile.business_address?.split(',')[0] || 'City'
+          city: vendor.business_location || 'Location not specified'
         },
-        specializations: profile.specializations || ['General Services'],
-        portfolio: [],
-        licenses: profile.certifications || [],
+        specializations: vendor.specializations || ['General Services'],
+        portfolio: vendor.portfolio_images || [],
+        licenses: vendor.certifications || [],
         pricing: {
           consultation: 50000
         }
