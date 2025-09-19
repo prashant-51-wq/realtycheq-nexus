@@ -107,6 +107,14 @@ export const Header = () => {
                 <NavigationMenuContent>
                   <div className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
                     <NavigationMenuLink asChild>
+                      <Link to="/free-consultation" className="block space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <div className="text-sm font-medium leading-none">Free Consultation</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Get expert advice within 24 hours
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                    <NavigationMenuLink asChild>
                       <Link to="/vendors" className="block space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
                         <div className="text-sm font-medium leading-none">Find Vendors</div>
                         <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -118,7 +126,7 @@ export const Header = () => {
                       <Link to="/services" className="block space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
                         <div className="text-sm font-medium leading-none">Professional Services</div>
                         <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                          Design, construction, and consultation services
+                          Browse all available services
                         </p>
                       </Link>
                     </NavigationMenuLink>
@@ -127,14 +135,6 @@ export const Header = () => {
                         <div className="text-sm font-medium leading-none">Tell us Requirements</div>
                         <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                           Share your needs and get matched
-                        </p>
-                      </Link>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink asChild>
-                      <Link to="/opportunities/new" className="block space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                        <div className="text-sm font-medium leading-none">Post Opportunity</div>
-                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                          List your project requirements
                         </p>
                       </Link>
                     </NavigationMenuLink>
