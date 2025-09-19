@@ -68,11 +68,11 @@ export default function Vendors() {
         verified: vendor.verified,
         rating: vendor.rating || 4.5,
         location: {
-          city: vendor.business_location || 'Location not specified'
+          city: 'Location available upon contact' // business_location removed for security
         },
         specializations: vendor.specializations || ['General Services'],
-        portfolio: vendor.portfolio_images || [],
-        licenses: vendor.certifications || [],
+        portfolio: [], // portfolio_images removed for security
+        licenses: [], // certifications removed for security
         pricing: {
           consultation: 50000
         }
