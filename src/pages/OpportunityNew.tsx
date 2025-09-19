@@ -26,6 +26,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { useAnalytics } from '@/lib/hooks/useAnalytics';
+import { supabase } from '@/integrations/supabase/client';
 
 interface RFQFormData {
   title: string;
@@ -171,8 +172,25 @@ export default function OpportunityNew() {
         location: formData.location.city
       });
 
-      // Mock API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Submit to Supabase
+      const { data, error } = await supabase
+        .from('service_requests')
+        .insert({
+          title: formData.title,
+          description: formData.description,
+          service_type: formData.category,
+          location: formData.location.city,
+          budget_min: formData.budget.min,
+          budget_max: formData.budget.max,
+          timeline_required: formData.timeline,
+          contact_name: 'Current User',
+          contact_email: 'user@example.com',
+          status: 'pending'
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
       
       toast({
         title: "Opportunity Posted Successfully!",
@@ -180,9 +198,10 @@ export default function OpportunityNew() {
       });
 
       navigate('/opportunities', { 
-        state: { posted: true, opportunityId: 'rfq-' + Date.now() }
+        state: { posted: true, opportunityId: data.id }
       });
     } catch (error) {
+      console.error('Error posting opportunity:', error);
       toast({
         title: "Error",
         description: "Failed to post opportunity. Please try again.",

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,8 @@ import {
   Home,
   BriefcaseIcon as Briefcase
 } from 'lucide-react';
-import { mockOpportunities } from '@/data/mockData';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const opportunityCategories = [
   { id: 'all', name: 'All Opportunities', count: 24 },
@@ -35,9 +36,57 @@ const opportunityCategories = [
 
 export default function Opportunities() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [savedOpportunities, setSavedOpportunities] = useState<Set<string>>(new Set());
+  const [opportunities, setOpportunities] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchOpportunities();
+  }, []);
+
+  const fetchOpportunities = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('service_requests')
+        .select('*')
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      
+      // Transform data to match opportunity format
+      const transformedOpportunities = data?.map(request => ({
+        id: request.id,
+        title: request.title,
+        description: request.description,
+        category: request.service_type,
+        budget: {
+          min: request.budget_min || 100000,
+          max: request.budget_max || 500000
+        },
+        timeline: request.timeline_required || 3,
+        location: {
+          city: request.location || 'City'
+        },
+        requirements: ['Quality Work', 'Timely Delivery'],
+        createdAt: new Date(request.created_at).toLocaleDateString()
+      })) || [];
+      
+      setOpportunities(transformedOpportunities);
+    } catch (error) {
+      console.error('Error fetching opportunities:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load opportunities. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSave = (id: string) => {
     setSavedOpportunities(prev => {
@@ -60,7 +109,7 @@ export default function Opportunities() {
     return `${formatAmount(min)} - ${formatAmount(max)}`;
   };
 
-  const filteredOpportunities = mockOpportunities.filter(opp => {
+  const filteredOpportunities = opportunities.filter(opp => {
     const matchesCategory = activeCategory === 'all' || opp.category === activeCategory;
     const matchesSearch = !searchQuery || 
       opp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -160,7 +209,21 @@ export default function Opportunities() {
 
           <TabsContent value={activeCategory}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {filteredOpportunities.map((opportunity) => (
+              {loading ? (
+                Array(4).fill(0).map((_, i) => (
+                  <Card key={i} className="card-premium">
+                    <CardHeader>
+                      <div className="h-6 bg-gray-200 rounded animate-pulse mb-2" />
+                      <div className="h-4 bg-gray-200 rounded animate-pulse w-20" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-16 bg-gray-200 rounded animate-pulse mb-4" />
+                      <div className="h-20 bg-gray-200 rounded animate-pulse" />
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                filteredOpportunities.map((opportunity) => (
                 <Card key={opportunity.id} className="card-premium hover-lift">
                   <CardHeader>
                     <div className="flex items-start justify-between">
@@ -239,8 +302,9 @@ export default function Opportunities() {
                       </Button>
                     </div>
                   </CardContent>
-                </Card>
-              ))}
+                  </Card>
+                ))
+              )}
             </div>
           </TabsContent>
         </Tabs>

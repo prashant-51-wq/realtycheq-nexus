@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,7 +25,8 @@ import {
   PaintBucket,
   Calculator
 } from 'lucide-react';
-import { mockVendors } from '@/data/mockData';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const vendorCategories = [
   { id: 'all', name: 'All Vendors', count: 156 },
@@ -37,9 +38,57 @@ const vendorCategories = [
 
 export default function Vendors() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [savedVendors, setSavedVendors] = useState<Set<string>>(new Set());
+  const [vendors, setVendors] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchVendors();
+  }, []);
+
+  const fetchVendors = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .in('role', ['vendor', 'contractor'])
+        .eq('verified', true);
+
+      if (error) throw error;
+      
+      // Transform data to match vendor format
+      const transformedVendors = data?.map(profile => ({
+        id: profile.user_id,
+        name: profile.name,
+        type: profile.role,
+        verified: profile.verified,
+        rating: profile.rating || 4.5,
+        location: {
+          city: profile.business_address?.split(',')[0] || 'City'
+        },
+        specializations: profile.specializations || ['General Services'],
+        portfolio: [],
+        licenses: profile.certifications || [],
+        pricing: {
+          consultation: 50000
+        }
+      })) || [];
+      
+      setVendors(transformedVendors);
+    } catch (error) {
+      console.error('Error fetching vendors:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load vendors. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSave = (id: string) => {
     setSavedVendors(prev => {
@@ -53,9 +102,9 @@ export default function Vendors() {
     });
   };
 
-  const filteredVendors = mockVendors.filter(vendor => {
+  const filteredVendors = vendors.filter(vendor => {
     const matchesCategory = activeCategory === 'all' || 
-      vendor.specializations.some(spec => 
+      vendor.specializations.some((spec: string) => 
         spec.toLowerCase().includes(activeCategory.slice(0, -1).toLowerCase())
       );
     const matchesSearch = !searchQuery || 
@@ -138,7 +187,21 @@ export default function Vendors() {
 
           <TabsContent value={activeCategory}>
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredVendors.map((vendor) => (
+              {loading ? (
+                Array(6).fill(0).map((_, i) => (
+                  <Card key={i} className="card-premium">
+                    <CardHeader>
+                      <div className="h-6 bg-gray-200 rounded animate-pulse mb-2" />
+                      <div className="h-4 bg-gray-200 rounded animate-pulse w-20" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-16 bg-gray-200 rounded animate-pulse mb-4" />
+                      <div className="h-20 bg-gray-200 rounded animate-pulse" />
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                filteredVendors.map((vendor) => (
                 <Card key={vendor.id} className="card-premium hover-lift">
                   <CardHeader>
                     <div className="flex items-start justify-between">
@@ -246,8 +309,9 @@ export default function Vendors() {
                       </Button>
                     </div>
                   </CardContent>
-                </Card>
-              ))}
+                    </Card>
+                  ))
+              )}
             </div>
           </TabsContent>
         </Tabs>
