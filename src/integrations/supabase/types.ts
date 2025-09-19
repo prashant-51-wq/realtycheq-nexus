@@ -911,6 +911,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "vendor_reviews_service_request_id_fkey"
+            columns: ["service_request_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_service_requests"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "vendor_reviews_vendor_id_fkey"
             columns: ["vendor_id"]
             isOneToOne: false
@@ -982,9 +989,99 @@ export type Database = {
         }
         Relationships: []
       }
+      vendor_service_requests: {
+        Row: {
+          budget_max: number | null
+          budget_min: number | null
+          client_id: string | null
+          contact_info: string | null
+          created_at: string | null
+          description: string | null
+          id: string | null
+          location: string | null
+          priority: string | null
+          service_type: string | null
+          status: string | null
+          timeline_required: number | null
+          title: string | null
+          updated_at: string | null
+          vendor_id: string | null
+        }
+        Insert: {
+          budget_max?: number | null
+          budget_min?: number | null
+          client_id?: string | null
+          contact_info?: never
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          location?: string | null
+          priority?: string | null
+          service_type?: string | null
+          status?: string | null
+          timeline_required?: number | null
+          title?: string | null
+          updated_at?: string | null
+          vendor_id?: string | null
+        }
+        Update: {
+          budget_max?: number | null
+          budget_min?: number | null
+          client_id?: string | null
+          contact_info?: never
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          location?: string | null
+          priority?: string | null
+          service_type?: string | null
+          status?: string | null
+          timeline_required?: number | null
+          title?: string | null
+          updated_at?: string | null
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_requests_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "business_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_requests_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_requests_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "business_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_requests_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
-      [_ in never]: never
+      get_service_request_contact: {
+        Args: { request_id: string }
+        Returns: {
+          contact_email: string
+          contact_name: string
+          contact_phone: string
+        }[]
+      }
     }
     Enums: {
       membership_tier: "basic" | "standard" | "premium"
