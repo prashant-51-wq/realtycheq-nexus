@@ -17,7 +17,12 @@ import {
   Palette,
   Hammer,
   Calculator,
-  Crown
+  Crown,
+  Brain,
+  BookOpen,
+  Building2,
+  Mountain,
+  Bot
 } from 'lucide-react';
 import { mockProperties, mockMembershipPlans } from '@/data/mockData';
 import { useState } from 'react';
@@ -372,6 +377,122 @@ const Index = () => {
               <h3 className="font-semibold text-lg mb-3">Community Driven</h3>
               <p className="text-muted-foreground">Join thriving communities with DAO governance</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Explore New Features */}
+      <section className="py-16 bg-hero-gradient">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-headline mb-4">Explore New Features</h2>
+            <p className="text-subheadline">
+              Discover our latest tools and services designed to enhance your real estate journey
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="card-premium hover-lift text-center">
+              <CardContent className="p-8">
+                <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Brain className="h-8 w-8 text-blue-500" />
+                </div>
+                <h3 className="font-semibold text-lg mb-3">AI Consultant</h3>
+                <p className="text-muted-foreground mb-4">
+                  Get instant, personalized real estate advice from our AI-powered consultant 24/7
+                </p>
+                <Button asChild>
+                  <Link to="/ai-consultant">
+                    Try Now <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="card-premium hover-lift text-center">
+              <CardContent className="p-8">
+                <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Building2 className="h-8 w-8 text-green-500" />
+                </div>
+                <h3 className="font-semibold text-lg mb-3">House Plans</h3>
+                <p className="text-muted-foreground mb-4">
+                  Browse and download professionally designed house plans from top architects
+                </p>
+                <Button asChild>
+                  <Link to="/house-plans">
+                    Explore Plans <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="card-premium hover-lift text-center">
+              <CardContent className="p-8">
+                <div className="w-16 h-16 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Mountain className="h-8 w-8 text-purple-500" />
+                </div>
+                <h3 className="font-semibold text-lg mb-3">Plots Marketplace</h3>
+                <p className="text-muted-foreground mb-4">
+                  Buy and sell land parcels with verified ownership and clear titles
+                </p>
+                <Button asChild>
+                  <Link to="/plots">
+                    Browse Plots <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="card-premium hover-lift text-center">
+              <CardContent className="p-8">
+                <div className="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <BookOpen className="h-8 w-8 text-orange-500" />
+                </div>
+                <h3 className="font-semibold text-lg mb-3">Blog & Insights</h3>
+                <p className="text-muted-foreground mb-4">
+                  Stay updated with market trends, investment tips, and expert insights
+                </p>
+                <Button asChild>
+                  <Link to="/blog">
+                    Read Blog <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="card-premium hover-lift text-center">
+              <CardContent className="p-8">
+                <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp className="h-8 w-8 text-red-500" />
+                </div>
+                <h3 className="font-semibold text-lg mb-3">Opportunities</h3>
+                <p className="text-muted-foreground mb-4">
+                  Discover project opportunities, RFPs, and business partnerships
+                </p>
+                <Button asChild>
+                  <Link to="/opportunities">
+                    View Opportunities <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="card-premium hover-lift text-center">
+              <CardContent className="p-8">
+                <div className="w-16 h-16 bg-teal-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Hammer className="h-8 w-8 text-teal-500" />
+                </div>
+                <h3 className="font-semibold text-lg mb-3">Join as Professional</h3>
+                <p className="text-muted-foreground mb-4">
+                  Register as a vendor or contractor and start receiving project opportunities
+                </p>
+                <Button asChild>
+                  <Link to="/vendor-onboarding">
+                    Get Started <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>

@@ -33,7 +33,11 @@ import {
   Search,
   Settings,
   Home,
-  MessageCircle
+  MessageCircle,
+  BookOpen,
+  Building2,
+  Brain,
+  Mountain
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -88,6 +92,14 @@ export const Header = () => {
                         </p>
                       </Link>
                     </NavigationMenuLink>
+                    <NavigationMenuLink asChild>
+                      <Link to="/plots" className="block space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <div className="text-sm font-medium leading-none">Buy & Sell Plots</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Land parcels and plot investments
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
                     {user && (profile?.role === 'seller' || profile?.role === 'super_admin') && (
                       <NavigationMenuLink asChild>
                         <Link to="/list-property" className="block space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
@@ -115,10 +127,26 @@ export const Header = () => {
                       </Link>
                     </NavigationMenuLink>
                     <NavigationMenuLink asChild>
+                      <Link to="/ai-consultant" className="block space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <div className="text-sm font-medium leading-none">AI Consultant</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          24/7 AI-powered real estate advice
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                    <NavigationMenuLink asChild>
                       <Link to="/vendors" className="block space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
                         <div className="text-sm font-medium leading-none">Find Vendors</div>
                         <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                           Verified architects, contractors, and designers
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                    <NavigationMenuLink asChild>
+                      <Link to="/vendor-onboarding" className="block space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <div className="text-sm font-medium leading-none">Join as Professional</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Register as vendor or contractor
                         </p>
                       </Link>
                     </NavigationMenuLink>
@@ -148,6 +176,46 @@ export const Header = () => {
                     Communities
                   </NavigationMenuLink>
                 </Link>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Resources</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                    <NavigationMenuLink asChild>
+                      <Link to="/blog" className="block space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <div className="text-sm font-medium leading-none">Blog & Insights</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Latest market trends and expert insights
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                    <NavigationMenuLink asChild>
+                      <Link to="/house-plans" className="block space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <div className="text-sm font-medium leading-none">House Plans</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Browse and download architectural plans
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                    <NavigationMenuLink asChild>
+                      <Link to="/opportunities" className="block space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <div className="text-sm font-medium leading-none">Opportunities</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Project opportunities and RFPs
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                    <NavigationMenuLink asChild>
+                      <Link to="/learn" className="block space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <div className="text-sm font-medium leading-none">Learn</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Educational resources and guides
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                  </div>
+                </NavigationMenuContent>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
@@ -226,6 +294,22 @@ export const Header = () => {
                         Dashboard
                       </Link>
                     </DropdownMenuItem>
+                    {profile?.role === 'super_admin' && (
+                      <>
+                        <DropdownMenuItem asChild>
+                          <Link to="/community-management" className="flex items-center">
+                            <Users className="h-4 w-4 mr-2" />
+                            Manage Communities
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/blog-admin" className="flex items-center">
+                            <BookOpen className="h-4 w-4 mr-2" />
+                            Blog Admin
+                          </Link>
+                        </DropdownMenuItem>
+                      </>
+                    )}
                     <DropdownMenuItem asChild>
                       <Link to="/settings" className="flex items-center">
                         <Settings className="h-4 w-4 mr-2" />
@@ -274,6 +358,13 @@ export const Header = () => {
                     Browse Properties
                   </Link>
                   <Link
+                    to="/plots"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="px-3 py-2 text-sm font-medium rounded-lg transition-colors text-muted-foreground hover:text-foreground hover:bg-accent"
+                  >
+                    Buy & Sell Plots
+                  </Link>
+                  <Link
                     to="/choice"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="px-3 py-2 text-sm font-medium rounded-lg transition-colors text-muted-foreground hover:text-foreground hover:bg-accent"
@@ -286,6 +377,13 @@ export const Header = () => {
                     className="px-3 py-2 text-sm font-medium rounded-lg transition-colors text-muted-foreground hover:text-foreground hover:bg-accent"
                   >
                     Find Vendors
+                  </Link>
+                  <Link
+                    to="/ai-consultant"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="px-3 py-2 text-sm font-medium rounded-lg transition-colors text-muted-foreground hover:text-foreground hover:bg-accent"
+                  >
+                    AI Consultant
                   </Link>
                   <Link
                     to="/services"
@@ -307,6 +405,27 @@ export const Header = () => {
                     className="px-3 py-2 text-sm font-medium rounded-lg transition-colors text-muted-foreground hover:text-foreground hover:bg-accent"
                   >
                     Communities
+                  </Link>
+                  <Link
+                    to="/blog"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="px-3 py-2 text-sm font-medium rounded-lg transition-colors text-muted-foreground hover:text-foreground hover:bg-accent"
+                  >
+                    Blog
+                  </Link>
+                  <Link
+                    to="/house-plans"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="px-3 py-2 text-sm font-medium rounded-lg transition-colors text-muted-foreground hover:text-foreground hover:bg-accent"
+                  >
+                    House Plans
+                  </Link>
+                  <Link
+                    to="/opportunities"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="px-3 py-2 text-sm font-medium rounded-lg transition-colors text-muted-foreground hover:text-foreground hover:bg-accent"
+                  >
+                    Opportunities
                   </Link>
                   <Link
                     to="/about"
