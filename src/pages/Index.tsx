@@ -24,13 +24,16 @@ import {
   Mountain,
   Bot
 } from 'lucide-react';
-import { mockProperties, mockMembershipPlans } from '@/data/mockData';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { mockMembershipPlans } from '@/data/mockData';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import heroImage from '@/assets/hero-property.jpg';
 
 const Index = () => {
+  const navigate = useNavigate();
   const [savedProperties, setSavedProperties] = useState<Set<string>>(new Set());
+  const [featuredProperties, setFeaturedProperties] = useState<any[]>([]);
 
   const handleSaveProperty = (id: string) => {
     setSavedProperties(prev => {
@@ -45,12 +48,58 @@ const Index = () => {
   };
 
   const handleViewProperty = (id: string) => {
-    window.location.href = `/browse/${id}`;
+    navigate(`/browse/${id}`);
   };
 
   const handleCompareProperty = (id: string) => {
     console.log('Compare property:', id);
   };
+
+  const fetchFeaturedProperties = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('status', 'active')
+        .eq('verified', true)
+        .order('views', { ascending: false })
+        .limit(3);
+
+      if (error) throw error;
+      
+      if (data && data.length > 0) {
+        // Transform database properties to match expected format
+        const transformedProperties = data.map(property => ({
+          id: property.id,
+          title: property.title,
+          type: property.property_type,
+          price: property.price,
+          area: property.area,
+          bedrooms: property.bedrooms,
+          bathrooms: property.bathrooms,
+          location: {
+            locality: property.locality,
+            city: property.city,
+            address: property.address
+          },
+          images: property.images || ['https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop'],
+          verified: property.verified,
+          isChoice: property.is_choice,
+          views: property.views,
+          daysOnMarket: Math.floor((new Date().getTime() - new Date(property.created_at).getTime()) / (1000 * 3600 * 24))
+        }));
+        setFeaturedProperties(transformedProperties);
+      }
+    } catch (error) {
+      console.error('Error fetching properties:', error);
+      // Fallback to mock data if database fetch fails
+      setFeaturedProperties([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchFeaturedProperties();
+  }, []);
 
   const categories = [
     {
@@ -137,16 +186,23 @@ const Index = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-            {mockProperties.slice(0, 3).map((property) => (
-              <PropertyCard
-                key={property.id}
-                property={property}
-                saved={savedProperties.has(property.id)}
-                onSave={handleSaveProperty}
-                onView={handleViewProperty}
-                onCompare={handleCompareProperty}
-              />
-            ))}
+            {featuredProperties.length > 0 ? (
+              featuredProperties.map((property) => (
+                <PropertyCard
+                  key={property.id}
+                  property={property}
+                  saved={savedProperties.has(property.id)}
+                  onSave={handleSaveProperty}
+                  onView={handleViewProperty}
+                  onCompare={handleCompareProperty}
+                />
+              ))
+            ) : (
+              // Show skeleton loading or message
+              <div className="col-span-full text-center py-8">
+                <p className="text-muted-foreground">Loading featured properties...</p>
+              </div>
+            )}
           </div>
 
           <div className="text-center">

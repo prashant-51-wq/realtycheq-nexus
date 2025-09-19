@@ -100,7 +100,7 @@ export function HeroSection() {
         navigate('/opportunities/new');
         break;
       case 'vendor':
-        navigate('/vendors/join');
+        navigate('/vendor-onboarding');
         break;
       case 'membership':
         navigate('/membership');

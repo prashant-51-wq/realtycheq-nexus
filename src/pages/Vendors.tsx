@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -347,9 +348,11 @@ export default function Vendors() {
                 Get verified, showcase your work, and win more projects.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <Button size="lg" className="btn-premium">
-                  <Shield className="h-5 w-5 mr-2" />
-                  Apply as Vendor
+                <Button size="lg" className="btn-premium" asChild>
+                  <Link to="/vendor-onboarding">
+                    <Shield className="h-5 w-5 mr-2" />
+                    Apply as Vendor
+                  </Link>
                 </Button>
                 <Button size="lg" variant="outline">
                   Learn More

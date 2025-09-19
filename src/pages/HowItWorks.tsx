@@ -255,7 +255,7 @@ export default function HowItWorks() {
             </div>
             <div className="text-center mt-8">
               <Button asChild className="btn-premium" size="lg">
-                <Link to="/vendors/onboard">
+                <Link to="/vendor-onboarding">
                   Join as Vendor
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
