@@ -5,37 +5,38 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { RoleSelector } from '@/components/auth/RoleSelector';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Mail, Lock, User, UserCheck } from 'lucide-react';
+import { Loader2, Mail, Lock, User, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { UserRole } from '@/types';
+
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [role, setRole] = useState('buyer');
+  const [role, setRole] = useState<UserRole>('buyer');
   const {
     signIn,
     signUp,
     user
   } = useAuth();
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
   const navigate = useNavigate();
+
   useEffect(() => {
     if (user) {
       navigate('/');
     }
   }, [user, navigate]);
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const {
-        error
-      } = await signIn(email, password);
+      const { error } = await signIn(email, password);
       if (error) {
         toast({
           title: 'Sign In Failed',
@@ -59,13 +60,12 @@ const Auth = () => {
       setIsLoading(false);
     }
   };
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const {
-        error
-      } = await signUp(email, password, name, role);
+      const { error } = await signUp(email, password, name, role);
       if (error) {
         if (error.message.includes('User already registered')) {
           toast({
@@ -96,8 +96,18 @@ const Auth = () => {
       setIsLoading(false);
     }
   };
-  return <div className="min-h-screen bg-hero-gradient flex items-center justify-center p-4">
+
+  return (
+    <div className="min-h-screen bg-hero-gradient flex items-center justify-center p-4">
       <div className="w-full max-w-md">
+        {/* Back to Home */}
+        <Button variant="ghost" size="sm" asChild className="mb-4">
+          <Link to="/" className="flex items-center gap-2 text-white/80 hover:text-white">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Home
+          </Link>
+        </Button>
+
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2 text-slate-950">Welcome to RealtyCheq</h1>
           <p className="text-slate-950">Your trusted real estate platform</p>
@@ -120,7 +130,15 @@ const Auth = () => {
                     <Label htmlFor="signin-email">Email</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input id="signin-email" type="email" placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)} className="pl-10" required />
+                      <Input 
+                        id="signin-email" 
+                        type="email" 
+                        placeholder="Enter your email" 
+                        value={email} 
+                        onChange={e => setEmail(e.target.value)} 
+                        className="pl-10" 
+                        required 
+                      />
                     </div>
                   </div>
                   
@@ -128,15 +146,27 @@ const Auth = () => {
                     <Label htmlFor="signin-password">Password</Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input id="signin-password" type="password" placeholder="Enter your password" value={password} onChange={e => setPassword(e.target.value)} className="pl-10" required />
+                      <Input 
+                        id="signin-password" 
+                        type="password" 
+                        placeholder="Enter your password" 
+                        value={password} 
+                        onChange={e => setPassword(e.target.value)} 
+                        className="pl-10" 
+                        required 
+                      />
                     </div>
                   </div>
                   
                   <Button type="submit" className="w-full btn-hero" disabled={isLoading}>
-                    {isLoading ? <>
+                    {isLoading ? (
+                      <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Signing In...
-                      </> : 'Sign In'}
+                      </>
+                    ) : (
+                      'Sign In'
+                    )}
                   </Button>
                 </form>
               </TabsContent>
@@ -147,7 +177,15 @@ const Auth = () => {
                     <Label htmlFor="signup-name">Full Name</Label>
                     <div className="relative">
                       <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input id="signup-name" type="text" placeholder="Enter your full name" value={name} onChange={e => setName(e.target.value)} className="pl-10" required />
+                      <Input 
+                        id="signup-name" 
+                        type="text" 
+                        placeholder="Enter your full name" 
+                        value={name} 
+                        onChange={e => setName(e.target.value)} 
+                        className="pl-10" 
+                        required 
+                      />
                     </div>
                   </div>
                   
@@ -155,7 +193,15 @@ const Auth = () => {
                     <Label htmlFor="signup-email">Email</Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input id="signup-email" type="email" placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)} className="pl-10" required />
+                      <Input 
+                        id="signup-email" 
+                        type="email" 
+                        placeholder="Enter your email" 
+                        value={email} 
+                        onChange={e => setEmail(e.target.value)} 
+                        className="pl-10" 
+                        required 
+                      />
                     </div>
                   </div>
                   
@@ -163,33 +209,33 @@ const Auth = () => {
                     <Label htmlFor="signup-password">Password</Label>
                     <div className="relative">
                       <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input id="signup-password" type="password" placeholder="Create a password (min 6 characters)" value={password} onChange={e => setPassword(e.target.value)} className="pl-10" minLength={6} required />
+                      <Input 
+                        id="signup-password" 
+                        type="password" 
+                        placeholder="Create a password (min 6 characters)" 
+                        value={password} 
+                        onChange={e => setPassword(e.target.value)} 
+                        className="pl-10" 
+                        minLength={6} 
+                        required 
+                      />
                     </div>
                   </div>
                   
-                  <div className="space-y-2">
-                    <Label htmlFor="role">I am a</Label>
-                    <div className="relative">
-                      <UserCheck className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
-                      <Select value={role} onValueChange={setRole}>
-                        <SelectTrigger className="pl-10">
-                          <SelectValue placeholder="Select your role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="buyer">Buyer</SelectItem>
-                          <SelectItem value="seller">Seller</SelectItem>
-                          <SelectItem value="broker">Broker</SelectItem>
-                          <SelectItem value="owner">Owner</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
+                  <RoleSelector 
+                    selectedRole={role}
+                    onRoleChange={setRole}
+                  />
                   
                   <Button type="submit" className="w-full btn-hero" disabled={isLoading}>
-                    {isLoading ? <>
+                    {isLoading ? (
+                      <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Creating Account...
-                      </> : 'Create Account'}
+                      </>
+                    ) : (
+                      'Create Account'
+                    )}
                   </Button>
                 </form>
               </TabsContent>
@@ -201,6 +247,7 @@ const Auth = () => {
           By continuing, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>
-    </div>;
+    </div>
+  );
 };
 export default Auth;

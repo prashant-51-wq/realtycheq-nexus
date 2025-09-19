@@ -88,7 +88,7 @@ export const Header = () => {
                         </p>
                       </Link>
                     </NavigationMenuLink>
-                    {user && (profile?.role === 'seller' || profile?.role === 'admin') && (
+                    {user && (profile?.role === 'seller' || profile?.role === 'super_admin') && (
                       <NavigationMenuLink asChild>
                         <Link to="/list-property" className="block space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
                           <div className="text-sm font-medium leading-none">List Property</div>
@@ -203,7 +203,7 @@ export const Header = () => {
                   </Link>
                 </Button>
                 
-                {(profile?.role === 'seller' || profile?.role === 'admin') && (
+                {(profile?.role === 'seller' || profile?.role === 'super_admin') && (
                   <Button variant="outline" asChild>
                     <Link to="/list-property">
                       <Plus className="h-4 w-4 mr-2" />
@@ -321,7 +321,7 @@ export const Header = () => {
                 <div className="flex flex-col space-y-2 pt-4 border-t border-border">
                   {user ? (
                     <>
-                      {(profile?.role === 'seller' || profile?.role === 'admin') && (
+                      {(profile?.role === 'seller' || profile?.role === 'super_admin') && (
                         <Button asChild className="w-full btn-premium" onClick={() => setIsMobileMenuOpen(false)}>
                           <Link to="/list-property">
                             <Plus className="h-4 w-4 mr-2" />

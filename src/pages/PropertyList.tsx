@@ -51,7 +51,7 @@ const PropertyList = () => {
       return;
     }
 
-    if (profile?.role !== 'seller' && profile?.role !== 'admin') {
+    if (profile?.role !== 'seller' && profile?.role !== 'super_admin') {
       toast({
         title: 'Access denied',
         description: 'Only sellers can list properties. Please update your profile role.',
@@ -149,7 +149,7 @@ const PropertyList = () => {
     );
   }
 
-  if (profile?.role !== 'seller' && profile?.role !== 'admin') {
+  if (profile?.role !== 'seller' && profile?.role !== 'super_admin') {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <Card className="card-premium max-w-md text-center">

@@ -8,10 +8,28 @@ interface Profile {
   name: string;
   phone?: string;
   avatar_url?: string;
-  role: 'buyer' | 'seller' | 'admin' | 'broker' | 'owner';
+  role: 'buyer' | 'seller' | 'vendor' | 'contractor' | 'broker' | 'super_admin';
   membership: 'basic' | 'standard' | 'premium';
   verified: boolean;
   kyc_status: 'pending' | 'verified' | 'rejected';
+  business_name?: string;
+  license_number?: string;
+  specializations?: string[];
+  experience_years?: number;
+  service_areas?: string[];
+  website_url?: string;
+  business_address?: string;
+  gst_number?: string;
+  pan_number?: string;
+  aadhar_number?: string;
+  portfolio_images?: string[];
+  certifications?: string[];
+  rating?: number;
+  review_count?: number;
+  is_featured?: boolean;
+  approval_status?: 'pending' | 'approved' | 'rejected';
+  approved_by?: string;
+  approved_at?: string;
 }
 
 interface AuthContextType {
@@ -125,7 +143,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const { error } = await supabase
       .from('profiles')
-      .update(updates)
+      .update({
+        name: updates.name,
+        phone: updates.phone,
+        avatar_url: updates.avatar_url,
+        role: updates.role as any, // Cast to handle type mismatch with generated types
+        membership: updates.membership,
+        verified: updates.verified,
+        kyc_status: updates.kyc_status,
+        business_name: updates.business_name,
+        license_number: updates.license_number,
+        specializations: updates.specializations,
+        experience_years: updates.experience_years,
+        service_areas: updates.service_areas,
+        website_url: updates.website_url,
+        business_address: updates.business_address,
+        gst_number: updates.gst_number,
+        pan_number: updates.pan_number,
+        aadhar_number: updates.aadhar_number,
+        portfolio_images: updates.portfolio_images,
+        certifications: updates.certifications,
+        rating: updates.rating,
+        review_count: updates.review_count,
+        is_featured: updates.is_featured,
+        approval_status: updates.approval_status,
+        approved_by: updates.approved_by,
+        approved_at: updates.approved_at
+      })
       .eq('user_id', user.id);
 
     if (!error) {

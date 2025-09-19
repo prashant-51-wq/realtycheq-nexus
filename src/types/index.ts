@@ -14,14 +14,10 @@ export interface User {
 export type UserRole = 
   | 'buyer' 
   | 'seller' 
-  | 'owner' 
-  | 'broker' 
+  | 'vendor' 
   | 'contractor' 
-  | 'builder' 
-  | 'designer' 
-  | 'auditor' 
-  | 'investor' 
-  | 'admin';
+  | 'broker' 
+  | 'super_admin';
 
 export type MembershipTier = 'basic' | 'standard' | 'premium';
 
