@@ -996,44 +996,7 @@ export type Database = {
       }
     }
     Functions: {
-      get_current_user_role: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      get_user_profile: {
-        Args: { profile_user_id?: string }
-        Returns: {
-          aadhar_number: string
-          approval_status: string
-          approved_at: string
-          approved_by: string
-          avatar_url: string
-          business_address: string
-          business_name: string
-          certifications: string[]
-          created_at: string
-          experience_years: number
-          gst_number: string
-          id: string
-          is_featured: boolean
-          kyc_status: string
-          license_number: string
-          membership: Database["public"]["Enums"]["membership_tier"]
-          name: string
-          pan_number: string
-          phone: string
-          portfolio_images: string[]
-          rating: number
-          review_count: number
-          role: Database["public"]["Enums"]["user_role"]
-          service_areas: string[]
-          specializations: string[]
-          updated_at: string
-          user_id: string
-          verified: boolean
-          website_url: string
-        }[]
-      }
+      [_ in never]: never
     }
     Enums: {
       membership_tier: "basic" | "standard" | "premium"
