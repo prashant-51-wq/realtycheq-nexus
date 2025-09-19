@@ -14,6 +14,379 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_sessions: {
+        Row: {
+          context: Json | null
+          created_at: string
+          id: string
+          messages: Json[] | null
+          session_type: string
+          status: string
+          title: string | null
+          total_tokens: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          context?: Json | null
+          created_at?: string
+          id?: string
+          messages?: Json[] | null
+          session_type?: string
+          status?: string
+          title?: string | null
+          total_tokens?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          context?: Json | null
+          created_at?: string
+          id?: string
+          messages?: Json[] | null
+          session_type?: string
+          status?: string
+          title?: string | null
+          total_tokens?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      blog_posts: {
+        Row: {
+          author_id: string
+          category: string
+          content: string
+          created_at: string
+          excerpt: string | null
+          featured: boolean
+          featured_image: string | null
+          id: string
+          published: boolean
+          slug: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          views: number
+        }
+        Insert: {
+          author_id: string
+          category?: string
+          content: string
+          created_at?: string
+          excerpt?: string | null
+          featured?: boolean
+          featured_image?: string | null
+          id?: string
+          published?: boolean
+          slug: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          views?: number
+        }
+        Update: {
+          author_id?: string
+          category?: string
+          content?: string
+          created_at?: string
+          excerpt?: string | null
+          featured?: boolean
+          featured_image?: string | null
+          id?: string
+          published?: boolean
+          slug?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          views?: number
+        }
+        Relationships: []
+      }
+      communities: {
+        Row: {
+          admin_id: string
+          avatar_url: string | null
+          banner_url: string | null
+          category: string
+          created_at: string
+          description: string | null
+          guidelines: string | null
+          id: string
+          join_approval: boolean
+          location: string | null
+          member_count: number
+          name: string
+          slug: string
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          admin_id: string
+          avatar_url?: string | null
+          banner_url?: string | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          guidelines?: string | null
+          id?: string
+          join_approval?: boolean
+          location?: string | null
+          member_count?: number
+          name: string
+          slug: string
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          admin_id?: string
+          avatar_url?: string | null
+          banner_url?: string | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          guidelines?: string | null
+          id?: string
+          join_approval?: boolean
+          location?: string | null
+          member_count?: number
+          name?: string
+          slug?: string
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: []
+      }
+      community_members: {
+        Row: {
+          community_id: string
+          id: string
+          joined_at: string
+          role: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          community_id: string
+          id?: string
+          joined_at?: string
+          role?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          community_id?: string
+          id?: string
+          joined_at?: string
+          role?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_members_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_posts: {
+        Row: {
+          attachments: string[] | null
+          author_id: string
+          comments_count: number
+          community_id: string
+          content: string
+          created_at: string
+          id: string
+          images: string[] | null
+          likes: number
+          pinned: boolean
+          post_type: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          attachments?: string[] | null
+          author_id: string
+          comments_count?: number
+          community_id: string
+          content: string
+          created_at?: string
+          id?: string
+          images?: string[] | null
+          likes?: number
+          pinned?: boolean
+          post_type?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          attachments?: string[] | null
+          author_id?: string
+          comments_count?: number
+          community_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          images?: string[] | null
+          likes?: number
+          pinned?: boolean
+          post_type?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_posts_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      house_plans: {
+        Row: {
+          architect_id: string | null
+          area: number | null
+          bathrooms: number | null
+          bedrooms: number | null
+          category: string
+          created_at: string
+          description: string | null
+          downloads: number
+          featured: boolean
+          floor_count: number | null
+          id: string
+          images: string[] | null
+          likes: number
+          plan_files: string[] | null
+          price: number | null
+          style: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          architect_id?: string | null
+          area?: number | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          downloads?: number
+          featured?: boolean
+          floor_count?: number | null
+          id?: string
+          images?: string[] | null
+          likes?: number
+          plan_files?: string[] | null
+          price?: number | null
+          style?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          architect_id?: string | null
+          area?: number | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          downloads?: number
+          featured?: boolean
+          floor_count?: number | null
+          id?: string
+          images?: string[] | null
+          likes?: number
+          plan_files?: string[] | null
+          price?: number | null
+          style?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          data: Json | null
+          id: string
+          message: string
+          read: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json | null
+          id?: string
+          message: string
+          read?: boolean
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json | null
+          id?: string
+          message?: string
+          read?: boolean
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      opportunity_bids: {
+        Row: {
+          amount: number
+          attachments: string[] | null
+          bidder_id: string
+          id: string
+          opportunity_id: string
+          proposal: string
+          status: string
+          submitted_at: string
+          timeline_days: number | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          attachments?: string[] | null
+          bidder_id: string
+          id?: string
+          opportunity_id: string
+          proposal: string
+          status?: string
+          submitted_at?: string
+          timeline_days?: number | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          attachments?: string[] | null
+          bidder_id?: string
+          id?: string
+          opportunity_id?: string
+          proposal?: string
+          status?: string
+          submitted_at?: string
+          timeline_days?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           aadhar_number: string | null
@@ -346,6 +719,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_favorites: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          item_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          item_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          item_type?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_queries: {
         Row: {

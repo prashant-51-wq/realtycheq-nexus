@@ -22,6 +22,9 @@ import Choice from "./pages/Choice";
 import Learn from "./pages/Learn";
 import Membership from "./pages/Membership";
 import Dashboard from "./pages/Dashboard";
+import Blog from "./pages/Blog";
+import HousePlans from "./pages/HousePlans";
+import AIConsultant from "./pages/AIConsultant";
 import Settings from "./pages/Settings";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -63,6 +66,9 @@ const App = () => (
             <Route path="/communities" element={<Communities />} />
             <Route path="/membership" element={<Membership />} />
             <Route path="/learn" element={<Learn />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/house-plans" element={<HousePlans />} />
+            <Route path="/ai-consultant" element={<AIConsultant />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
