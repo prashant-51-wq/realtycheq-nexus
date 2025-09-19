@@ -931,16 +931,13 @@ export type Database = {
       business_directory: {
         Row: {
           avatar_url: string | null
-          business_location: string | null
           business_name: string | null
-          certifications: string[] | null
           created_at: string | null
           experience_years: number | null
           id: string | null
           is_featured: boolean | null
           membership: Database["public"]["Enums"]["membership_tier"] | null
           name: string | null
-          portfolio_images: string[] | null
           rating: number | null
           review_count: number | null
           role: Database["public"]["Enums"]["user_role"] | null
@@ -948,20 +945,16 @@ export type Database = {
           specializations: string[] | null
           user_id: string | null
           verified: boolean | null
-          website_url: string | null
         }
         Insert: {
           avatar_url?: string | null
-          business_location?: never
           business_name?: string | null
-          certifications?: string[] | null
           created_at?: string | null
           experience_years?: number | null
           id?: string | null
           is_featured?: boolean | null
           membership?: Database["public"]["Enums"]["membership_tier"] | null
           name?: string | null
-          portfolio_images?: string[] | null
           rating?: number | null
           review_count?: number | null
           role?: Database["public"]["Enums"]["user_role"] | null
@@ -969,20 +962,16 @@ export type Database = {
           specializations?: string[] | null
           user_id?: string | null
           verified?: boolean | null
-          website_url?: string | null
         }
         Update: {
           avatar_url?: string | null
-          business_location?: never
           business_name?: string | null
-          certifications?: string[] | null
           created_at?: string | null
           experience_years?: number | null
           id?: string | null
           is_featured?: boolean | null
           membership?: Database["public"]["Enums"]["membership_tier"] | null
           name?: string | null
-          portfolio_images?: string[] | null
           rating?: number | null
           review_count?: number | null
           role?: Database["public"]["Enums"]["user_role"] | null
@@ -990,7 +979,6 @@ export type Database = {
           specializations?: string[] | null
           user_id?: string | null
           verified?: boolean | null
-          website_url?: string | null
         }
         Relationships: []
       }
