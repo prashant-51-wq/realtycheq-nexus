@@ -1082,6 +1082,15 @@ export type Database = {
           contact_phone: string
         }[]
       }
+      is_business_profile_accessible: {
+        Args: {
+          profile_approval_status: string
+          profile_role: Database["public"]["Enums"]["user_role"]
+          profile_user_id: string
+          profile_verified: boolean
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       membership_tier: "basic" | "standard" | "premium"
