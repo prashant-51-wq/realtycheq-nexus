@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,8 @@ import {
   Home,
   Briefcase
 } from 'lucide-react';
-import { mockServicePackages } from '@/data/mockData';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const serviceCategories = [
   {
@@ -45,6 +46,52 @@ const serviceCategories = [
 
 export default function Services() {
   const [activeCategory, setActiveCategory] = useState('design');
+  const [services, setServices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  const fetchServices = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('services')
+        .select(`
+          *,
+          profiles!services_vendor_id_fkey (
+            name,
+            avatar_url,
+            rating,
+            review_count
+          )
+        `)
+        .eq('is_active', true);
+
+      if (error) throw error;
+      setServices(data || []);
+    } catch (error) {
+      console.error('Error fetching services:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load services. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGetQuote = async (serviceId: string, serviceTitle: string) => {
+    navigate('/free-consultation', { 
+      state: { 
+        serviceType: serviceTitle,
+        serviceId: serviceId
+      }
+    });
+  };
 
   const formatPrice = (min: number, max: number) => {
     const formatAmount = (amount: number) => {
@@ -119,188 +166,352 @@ export default function Services() {
 
           <TabsContent value="design" className="mt-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mockServicePackages
-                .filter(pkg => pkg.category === 'design')
-                .map((service) => (
-                  <Card key={service.id} className="card-premium hover-lift">
+              {loading ? (
+                Array(6).fill(0).map((_, i) => (
+                  <Card key={i} className="card-premium">
                     <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <CardTitle className="text-lg">{service.name}</CardTitle>
-                          {service.popular && (
-                            <Badge className="mt-2 badge-choice">
-                              <Star className="h-3 w-3 mr-1" />
-                              Popular
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="text-right">
-                          <div className="font-bold text-lg">
-                            {formatPrice(service.pricing.min, service.pricing.max)}
-                          </div>
-                          <div className="flex items-center text-sm text-muted-foreground">
-                            <Clock className="h-3 w-3 mr-1" />
-                            {service.timeline} days
-                          </div>
-                        </div>
-                      </div>
+                      <div className="h-6 bg-gray-200 rounded animate-pulse mb-2" />
+                      <div className="h-4 bg-gray-200 rounded animate-pulse w-20" />
                     </CardHeader>
                     <CardContent>
-                      <p className="text-muted-foreground mb-4">{service.description}</p>
-                      
-                      <div className="space-y-3">
-                        <div>
-                          <h4 className="font-medium mb-2">Deliverables</h4>
-                          <ul className="space-y-1">
-                            {service.deliverables.map((item, index) => (
-                              <li key={index} className="flex items-center text-sm">
-                                <CheckCircle className="h-3 w-3 text-primary mr-2" />
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        <div>
-                          <h4 className="font-medium mb-2">Features</h4>
-                          <div className="flex flex-wrap gap-1">
-                            {service.features.map((feature, index) => (
-                              <Badge key={index} variant="secondary" className="text-xs">
-                                {feature}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex space-x-2 mt-6">
-                        <Button className="flex-1 btn-premium">
-                          Get Quote
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          View Details
-                          <ArrowRight className="h-4 w-4 ml-2" />
-                        </Button>
-                      </div>
+                      <div className="h-16 bg-gray-200 rounded animate-pulse mb-4" />
+                      <div className="h-20 bg-gray-200 rounded animate-pulse" />
                     </CardContent>
                   </Card>
-                ))}
+                ))
+              ) : (
+                services
+                  .filter(service => service.service_type === 'design' || service.service_type === 'architecture')
+                  .map((service) => (
+                    <Card key={service.id} className="card-premium hover-lift">
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <CardTitle className="text-lg">{service.title}</CardTitle>
+                            {service.profiles?.rating >= 4.5 && (
+                              <Badge className="mt-2 badge-choice">
+                                <Star className="h-3 w-3 mr-1" />
+                                Top Rated
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="text-right">
+                            <div className="font-bold text-lg">
+                              {service.price_min && service.price_max 
+                                ? formatPrice(service.price_min, service.price_max)
+                                : 'Contact for Price'
+                              }
+                            </div>
+                            {service.timeline_days && (
+                              <div className="flex items-center text-sm text-muted-foreground">
+                                <Clock className="h-3 w-3 mr-1" />
+                                {service.timeline_days} days
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-muted-foreground mb-4">{service.description}</p>
+                        
+                        {service.profiles && (
+                          <div className="flex items-center mb-4 p-3 bg-secondary/10 rounded-lg">
+                            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-3">
+                              <span className="text-primary font-semibold">
+                                {service.profiles.name?.charAt(0) || 'V'}
+                              </span>
+                            </div>
+                            <div>
+                              <div className="font-medium">{service.profiles.name}</div>
+                              <div className="flex items-center text-sm text-muted-foreground">
+                                <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400" />
+                                {service.profiles.rating || 'New'} 
+                                {service.profiles.review_count > 0 && `(${service.profiles.review_count} reviews)`}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="flex space-x-2 mt-6">
+                          <Button 
+                            className="flex-1 btn-premium"
+                            onClick={() => handleGetQuote(service.id, service.title)}
+                          >
+                            Get Quote
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            View Details
+                            <ArrowRight className="h-4 w-4 ml-2" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+              )}
             </div>
           </TabsContent>
 
           <TabsContent value="construction" className="mt-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card className="card-premium hover-lift">
-                <CardHeader>
-                  <CardTitle>Turnkey Construction</CardTitle>
-                  <div className="text-lg font-bold">₹1,200 - ₹1,800 per sqft</div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Complete construction management from foundation to finishing
-                  </p>
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-center text-sm">
-                      <CheckCircle className="h-3 w-3 text-primary mr-2" />
-                      End-to-end project management
-                    </li>
-                    <li className="flex items-center text-sm">
-                      <CheckCircle className="h-3 w-3 text-primary mr-2" />
-                      Quality materials & labor
-                    </li>
-                    <li className="flex items-center text-sm">
-                      <CheckCircle className="h-3 w-3 text-primary mr-2" />
-                      Timeline guarantee
-                    </li>
-                  </ul>
-                  <Button className="w-full btn-premium">Get Quote</Button>
-                </CardContent>
-              </Card>
+              {loading ? (
+                Array(4).fill(0).map((_, i) => (
+                  <Card key={i} className="card-premium">
+                    <CardHeader>
+                      <div className="h-6 bg-gray-200 rounded animate-pulse mb-2" />
+                      <div className="h-4 bg-gray-200 rounded animate-pulse w-20" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-16 bg-gray-200 rounded animate-pulse mb-4" />
+                      <div className="h-20 bg-gray-200 rounded animate-pulse" />
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                services
+                  .filter(service => service.service_type === 'construction' || service.service_type === 'renovation')
+                  .map((service) => (
+                    <Card key={service.id} className="card-premium hover-lift">
+                      <CardHeader>
+                        <CardTitle>{service.title}</CardTitle>
+                        <div className="text-lg font-bold">
+                          {service.price_min && service.price_max 
+                            ? formatPrice(service.price_min, service.price_max)
+                            : 'Contact for Price'
+                          }
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-muted-foreground mb-4">{service.description}</p>
+                        
+                        {service.profiles && (
+                          <div className="flex items-center mb-4 p-3 bg-secondary/10 rounded-lg">
+                            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-3">
+                              <span className="text-primary font-semibold">
+                                {service.profiles.name?.charAt(0) || 'V'}
+                              </span>
+                            </div>
+                            <div>
+                              <div className="font-medium">{service.profiles.name}</div>
+                              <div className="flex items-center text-sm text-muted-foreground">
+                                <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400" />
+                                {service.profiles.rating || 'New'} 
+                                {service.profiles.review_count > 0 && `(${service.profiles.review_count} reviews)`}
+                              </div>
+                            </div>
+                          </div>
+                        )}
 
-              <Card className="card-premium hover-lift">
-                <CardHeader>
-                  <CardTitle>House Renovation</CardTitle>
-                  <div className="text-lg font-bold">₹800 - ₹1,200 per sqft</div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Transform your existing space with modern renovations
-                  </p>
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-center text-sm">
-                      <CheckCircle className="h-3 w-3 text-primary mr-2" />
-                      Modular kitchen & bathrooms
-                    </li>
-                    <li className="flex items-center text-sm">
-                      <CheckCircle className="h-3 w-3 text-primary mr-2" />
-                      Electrical & plumbing updates
-                    </li>
-                    <li className="flex items-center text-sm">
-                      <CheckCircle className="h-3 w-3 text-primary mr-2" />
-                      Paint & flooring
-                    </li>
-                  </ul>
-                  <Button className="w-full btn-premium">Get Quote</Button>
-                </CardContent>
-              </Card>
+                        <Button 
+                          className="w-full btn-premium"
+                          onClick={() => handleGetQuote(service.id, service.title)}
+                        >
+                          Get Quote
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))
+              )}
+
+              {/* Fallback static cards if no services found */}
+              {!loading && services.filter(s => s.service_type === 'construction' || s.service_type === 'renovation').length === 0 && (
+                <>
+                  <Card className="card-premium hover-lift">
+                    <CardHeader>
+                      <CardTitle>Turnkey Construction</CardTitle>
+                      <div className="text-lg font-bold">₹1,200 - ₹1,800 per sqft</div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4">
+                        Complete construction management from foundation to finishing
+                      </p>
+                      <ul className="space-y-2 mb-6">
+                        <li className="flex items-center text-sm">
+                          <CheckCircle className="h-3 w-3 text-primary mr-2" />
+                          End-to-end project management
+                        </li>
+                        <li className="flex items-center text-sm">
+                          <CheckCircle className="h-3 w-3 text-primary mr-2" />
+                          Quality materials & labor
+                        </li>
+                        <li className="flex items-center text-sm">
+                          <CheckCircle className="h-3 w-3 text-primary mr-2" />
+                          Timeline guarantee
+                        </li>
+                      </ul>
+                      <Button 
+                        className="w-full btn-premium"
+                        onClick={() => handleGetQuote('construction-1', 'Turnkey Construction')}
+                      >
+                        Get Quote
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="card-premium hover-lift">
+                    <CardHeader>
+                      <CardTitle>House Renovation</CardTitle>
+                      <div className="text-lg font-bold">₹800 - ₹1,200 per sqft</div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4">
+                        Transform your existing space with modern renovations
+                      </p>
+                      <ul className="space-y-2 mb-6">
+                        <li className="flex items-center text-sm">
+                          <CheckCircle className="h-3 w-3 text-primary mr-2" />
+                          Modular kitchen & bathrooms
+                        </li>
+                        <li className="flex items-center text-sm">
+                          <CheckCircle className="h-3 w-3 text-primary mr-2" />
+                          Electrical & plumbing updates
+                        </li>
+                        <li className="flex items-center text-sm">
+                          <CheckCircle className="h-3 w-3 text-primary mr-2" />
+                          Paint & flooring
+                        </li>
+                      </ul>
+                      <Button 
+                        className="w-full btn-premium"
+                        onClick={() => handleGetQuote('renovation-1', 'House Renovation')}
+                      >
+                        Get Quote
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </>
+              )}
             </div>
           </TabsContent>
 
           <TabsContent value="verification" className="mt-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card className="card-premium hover-lift">
-                <CardHeader>
-                  <CardTitle>Property Verification</CardTitle>
-                  <div className="text-lg font-bold">₹15,000 - ₹35,000</div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Comprehensive property verification and documentation check
-                  </p>
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-center text-sm">
-                      <CheckCircle className="h-3 w-3 text-primary mr-2" />
-                      Title verification
-                    </li>
-                    <li className="flex items-center text-sm">
-                      <CheckCircle className="h-3 w-3 text-primary mr-2" />
-                      Legal compliance check
-                    </li>
-                    <li className="flex items-center text-sm">
-                      <CheckCircle className="h-3 w-3 text-primary mr-2" />
-                      Physical inspection
-                    </li>
-                  </ul>
-                  <Button className="w-full btn-premium">Book Verification</Button>
-                </CardContent>
-              </Card>
+              {loading ? (
+                Array(4).fill(0).map((_, i) => (
+                  <Card key={i} className="card-premium">
+                    <CardHeader>
+                      <div className="h-6 bg-gray-200 rounded animate-pulse mb-2" />
+                      <div className="h-4 bg-gray-200 rounded animate-pulse w-20" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-16 bg-gray-200 rounded animate-pulse mb-4" />
+                      <div className="h-20 bg-gray-200 rounded animate-pulse" />
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                services
+                  .filter(service => service.service_type === 'verification' || service.service_type === 'audit')
+                  .map((service) => (
+                    <Card key={service.id} className="card-premium hover-lift">
+                      <CardHeader>
+                        <CardTitle>{service.title}</CardTitle>
+                        <div className="text-lg font-bold">
+                          {service.price_min && service.price_max 
+                            ? formatPrice(service.price_min, service.price_max)
+                            : 'Contact for Price'
+                          }
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-muted-foreground mb-4">{service.description}</p>
+                        
+                        {service.profiles && (
+                          <div className="flex items-center mb-4 p-3 bg-secondary/10 rounded-lg">
+                            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mr-3">
+                              <span className="text-primary font-semibold">
+                                {service.profiles.name?.charAt(0) || 'V'}
+                              </span>
+                            </div>
+                            <div>
+                              <div className="font-medium">{service.profiles.name}</div>
+                              <div className="flex items-center text-sm text-muted-foreground">
+                                <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400" />
+                                {service.profiles.rating || 'New'} 
+                                {service.profiles.review_count > 0 && `(${service.profiles.review_count} reviews)`}
+                              </div>
+                            </div>
+                          </div>
+                        )}
 
-              <Card className="card-premium hover-lift">
-                <CardHeader>
-                  <CardTitle>Quality Audit</CardTitle>
-                  <div className="text-lg font-bold">₹10,000 - ₹25,000</div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Professional quality audit for construction projects
-                  </p>
-                  <ul className="space-y-2 mb-6">
-                    <li className="flex items-center text-sm">
-                      <CheckCircle className="h-3 w-3 text-primary mr-2" />
-                      Structural assessment
-                    </li>
-                    <li className="flex items-center text-sm">
-                      <CheckCircle className="h-3 w-3 text-primary mr-2" />
-                      Material quality check
-                    </li>
-                    <li className="flex items-center text-sm">
-                      <CheckCircle className="h-3 w-3 text-primary mr-2" />
-                      Compliance verification
-                    </li>
-                  </ul>
-                  <Button className="w-full btn-premium">Schedule Audit</Button>
-                </CardContent>
-              </Card>
+                        <Button 
+                          className="w-full btn-premium"
+                          onClick={() => handleGetQuote(service.id, service.title)}
+                        >
+                          Book Service
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))
+              )}
+
+              {/* Fallback static cards if no services found */}
+              {!loading && services.filter(s => s.service_type === 'verification' || s.service_type === 'audit').length === 0 && (
+                <>
+                  <Card className="card-premium hover-lift">
+                    <CardHeader>
+                      <CardTitle>Property Verification</CardTitle>
+                      <div className="text-lg font-bold">₹15,000 - ₹35,000</div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4">
+                        Comprehensive property verification and documentation check
+                      </p>
+                      <ul className="space-y-2 mb-6">
+                        <li className="flex items-center text-sm">
+                          <CheckCircle className="h-3 w-3 text-primary mr-2" />
+                          Title verification
+                        </li>
+                        <li className="flex items-center text-sm">
+                          <CheckCircle className="h-3 w-3 text-primary mr-2" />
+                          Legal compliance check
+                        </li>
+                        <li className="flex items-center text-sm">
+                          <CheckCircle className="h-3 w-3 text-primary mr-2" />
+                          Physical inspection
+                        </li>
+                      </ul>
+                      <Button 
+                        className="w-full btn-premium"
+                        onClick={() => handleGetQuote('verification-1', 'Property Verification')}
+                      >
+                        Book Verification
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="card-premium hover-lift">
+                    <CardHeader>
+                      <CardTitle>Quality Audit</CardTitle>
+                      <div className="text-lg font-bold">₹10,000 - ₹25,000</div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4">
+                        Professional quality audit for construction projects
+                      </p>
+                      <ul className="space-y-2 mb-6">
+                        <li className="flex items-center text-sm">
+                          <CheckCircle className="h-3 w-3 text-primary mr-2" />
+                          Structural assessment
+                        </li>
+                        <li className="flex items-center text-sm">
+                          <CheckCircle className="h-3 w-3 text-primary mr-2" />
+                          Material quality check
+                        </li>
+                        <li className="flex items-center text-sm">
+                          <CheckCircle className="h-3 w-3 text-primary mr-2" />
+                          Compliance verification
+                        </li>
+                      </ul>
+                      <Button 
+                        className="w-full btn-premium"
+                        onClick={() => handleGetQuote('audit-1', 'Quality Audit')}
+                      >
+                        Schedule Audit
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </>
+              )}
             </div>
           </TabsContent>
         </Tabs>
