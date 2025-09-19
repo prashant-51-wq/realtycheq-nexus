@@ -54,7 +54,7 @@ export default function Vendors() {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .in('role', ['vendor', 'contractor'])
+        .in('role', ['vendor', 'contractor'] as any)
         .eq('verified', true);
 
       if (error) throw error;

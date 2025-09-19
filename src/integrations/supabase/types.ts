@@ -491,7 +491,14 @@ export type Database = {
         | "commercial"
         | "office"
       query_status: "pending" | "in-progress" | "completed" | "closed"
-      user_role: "buyer" | "seller" | "admin" | "broker" | "owner"
+      user_role:
+        | "buyer"
+        | "seller"
+        | "admin"
+        | "broker"
+        | "owner"
+        | "vendor"
+        | "contractor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -630,7 +637,15 @@ export const Constants = {
         "office",
       ],
       query_status: ["pending", "in-progress", "completed", "closed"],
-      user_role: ["buyer", "seller", "admin", "broker", "owner"],
+      user_role: [
+        "buyer",
+        "seller",
+        "admin",
+        "broker",
+        "owner",
+        "vendor",
+        "contractor",
+      ],
     },
   },
 } as const
