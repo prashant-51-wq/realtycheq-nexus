@@ -486,6 +486,13 @@ export type Database = {
             foreignKeyName: "profiles_approved_by_fkey"
             columns: ["approved_by"]
             isOneToOne: false
+            referencedRelation: "business_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -587,6 +594,13 @@ export type Database = {
             foreignKeyName: "properties_seller_id_fkey"
             columns: ["seller_id"]
             isOneToOne: false
+            referencedRelation: "business_directory"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "properties_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
@@ -655,7 +669,21 @@ export type Database = {
             foreignKeyName: "service_requests_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
+            referencedRelation: "business_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_requests_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_requests_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "business_directory"
             referencedColumns: ["id"]
           },
           {
@@ -711,6 +739,13 @@ export type Database = {
           vendor_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "services_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "business_directory"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "services_vendor_id_fkey"
             columns: ["vendor_id"]
@@ -804,6 +839,13 @@ export type Database = {
             foreignKeyName: "user_queries_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "business_directory"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_queries_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["user_id"]
           },
@@ -851,6 +893,13 @@ export type Database = {
             foreignKeyName: "vendor_reviews_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
+            referencedRelation: "business_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_reviews_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -865,6 +914,13 @@ export type Database = {
             foreignKeyName: "vendor_reviews_vendor_id_fkey"
             columns: ["vendor_id"]
             isOneToOne: false
+            referencedRelation: "business_directory"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_reviews_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -872,10 +928,112 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      business_directory: {
+        Row: {
+          avatar_url: string | null
+          business_location: string | null
+          business_name: string | null
+          certifications: string[] | null
+          created_at: string | null
+          experience_years: number | null
+          id: string | null
+          is_featured: boolean | null
+          membership: Database["public"]["Enums"]["membership_tier"] | null
+          name: string | null
+          portfolio_images: string[] | null
+          rating: number | null
+          review_count: number | null
+          role: Database["public"]["Enums"]["user_role"] | null
+          service_areas: string[] | null
+          specializations: string[] | null
+          user_id: string | null
+          verified: boolean | null
+          website_url: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          business_location?: never
+          business_name?: string | null
+          certifications?: string[] | null
+          created_at?: string | null
+          experience_years?: number | null
+          id?: string | null
+          is_featured?: boolean | null
+          membership?: Database["public"]["Enums"]["membership_tier"] | null
+          name?: string | null
+          portfolio_images?: string[] | null
+          rating?: number | null
+          review_count?: number | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          service_areas?: string[] | null
+          specializations?: string[] | null
+          user_id?: string | null
+          verified?: boolean | null
+          website_url?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          business_location?: never
+          business_name?: string | null
+          certifications?: string[] | null
+          created_at?: string | null
+          experience_years?: number | null
+          id?: string | null
+          is_featured?: boolean | null
+          membership?: Database["public"]["Enums"]["membership_tier"] | null
+          name?: string | null
+          portfolio_images?: string[] | null
+          rating?: number | null
+          review_count?: number | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          service_areas?: string[] | null
+          specializations?: string[] | null
+          user_id?: string | null
+          verified?: boolean | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      get_current_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_user_profile: {
+        Args: { profile_user_id?: string }
+        Returns: {
+          aadhar_number: string
+          approval_status: string
+          approved_at: string
+          approved_by: string
+          avatar_url: string
+          business_address: string
+          business_name: string
+          certifications: string[]
+          created_at: string
+          experience_years: number
+          gst_number: string
+          id: string
+          is_featured: boolean
+          kyc_status: string
+          license_number: string
+          membership: Database["public"]["Enums"]["membership_tier"]
+          name: string
+          pan_number: string
+          phone: string
+          portfolio_images: string[]
+          rating: number
+          review_count: number
+          role: Database["public"]["Enums"]["user_role"]
+          service_areas: string[]
+          specializations: string[]
+          updated_at: string
+          user_id: string
+          verified: boolean
+          website_url: string
+        }[]
+      }
     }
     Enums: {
       membership_tier: "basic" | "standard" | "premium"
