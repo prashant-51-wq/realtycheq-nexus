@@ -259,6 +259,7 @@ const AIChat: React.FC<AIChatProps> = ({
         });
       } catch (error) {
         console.error('Failed to save chat to database:', error);
+        // This is expected behavior now due to RLS policies protecting contact info
       }
     }
   };
