@@ -1,6 +1,7 @@
 import { PropertyCard } from '@/components/cards/PropertyCard';
 import { HeroSection } from '@/components/common/HeroSection';
 import { QuickActions } from '@/components/common/QuickActions';
+import FeaturesSection from '@/components/common/FeaturesSection';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -174,6 +175,9 @@ const Index = () => {
 
       {/* Quick Actions */}
       <QuickActions />
+
+      {/* Features Section */}
+      <FeaturesSection />
 
       {/* Featured Properties */}
       <section className="py-16 bg-background">
