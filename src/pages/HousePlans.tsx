@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { HousePlansHero } from '@/components/common/HousePlansHero';
 
 const planCategories = [
   { id: 'all', name: 'All Plans', count: 0 },
@@ -117,31 +118,9 @@ export default function HousePlans() {
   const featuredPlans = plans.filter(plan => plan.featured).slice(0, 6);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <div className="bg-hero-gradient border-b border-border">
-        <div className="container mx-auto px-4 py-12">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-display mb-4">House Plans & Designs</h1>
-            <p className="text-subheadline mb-8">
-              Discover professionally designed house plans from top architects 
-              and designers across India
-            </p>
-            
-            {/* Search Bar */}
-            <div className="max-w-md mx-auto relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search house plans by style, size, or features..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-12 text-lg"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="bg-background">
+      {/* Premium Hero Section */}
+      <HousePlansHero />
 
       <div className="container mx-auto px-4 py-8">
         {/* Stats Bar */}
