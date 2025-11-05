@@ -1,0 +1,246 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* RealtyCheq Design System - Premium Real Estate Marketplace */
+
+@layer base {
+  :root {
+    /* Premium Color Palette */
+    --background: 0 0% 100%;
+    --foreground: 218 12% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 218 12% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 218 12% 15%;
+
+    /* Primary - Emerald */
+    --primary: 158 64% 52%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 158 64% 65%;
+    --primary-dark: 158 64% 42%;
+
+    /* Secondary - Royal Blue */
+    --secondary: 217 91% 60%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 217 91% 70%;
+    --secondary-dark: 217 91% 50%;
+
+    /* Neutral Palette */
+    --muted: 218 12% 97%;
+    --muted-foreground: 218 8% 46%;
+
+    --accent: 218 12% 95%;
+    --accent-foreground: 218 12% 15%;
+
+    /* Status Colors */
+    --success: 158 64% 52%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* UI Elements */
+    --border: 218 20% 88%;
+    --input: 218 20% 88%;
+    --ring: 158 64% 52%;
+
+    /* Design Tokens */
+    --radius: 1rem;
+    --radius-lg: 1.5rem;
+    --radius-xl: 2rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--secondary) / 0.05));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(218 12% 98%));
+
+    /* Shadows */
+    --shadow-soft: 0 2px 8px -2px hsl(218 12% 15% / 0.08);
+    --shadow-medium: 0 4px 16px -4px hsl(218 12% 15% / 0.12);
+    --shadow-large: 0 8px 32px -8px hsl(218 12% 15% / 0.16);
+    --shadow-premium: 0 12px 48px -12px hsl(var(--primary) / 0.2);
+
+    /* Typography */
+    --font-display: 'Inter', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary-light: 210 40% 90%;
+    --primary-dark: 210 40% 85%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --secondary-light: 217.2 32.6% 25%;
+    --secondary-dark: 217.2 32.6% 12%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --success: 158 64% 52%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body;
+  }
+}
+
+@layer components {
+  /* Premium Button Variants */
+  .btn-hero {
+    @apply bg-gradient-to-r from-primary to-secondary text-white shadow-premium hover:shadow-large transition-all duration-300 hover:scale-105;
+  }
+  
+  .btn-premium {
+    @apply bg-primary text-primary-foreground shadow-medium hover:bg-primary-dark transition-all duration-300 ease-out hover:shadow-large;
+  }
+  
+  .btn-ghost-premium {
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 ease-out;
+  }
+
+  /* Premium Card Styles */
+  .card-premium {
+    @apply bg-gradient-to-br from-card to-muted/30 shadow-soft hover:shadow-medium transition-all duration-300 ease-out border-0;
+  }
+  
+  .card-featured {
+    @apply bg-gradient-to-br from-primary/5 to-secondary/5 border-primary/20 shadow-premium;
+  }
+
+  /* Interactive Elements */
+  .hover-lift {
+    @apply transition-all duration-300 ease-out hover:scale-105 hover:shadow-medium;
+  }
+  
+  .hover-glow {
+    @apply transition-all duration-300 ease-out hover:shadow-premium;
+  }
+
+  /* Animations */
+  .animate-fade-in {
+    @apply animate-in fade-in-0 duration-700;
+  }
+  
+  .animate-slide-up {
+    @apply animate-in slide-in-from-bottom-4 duration-500;
+  }
+  
+  .animate-scale-in {
+    @apply animate-in zoom-in-95 duration-300;
+  }
+
+  /* Status Badges */
+  .badge-verified {
+    @apply bg-success/10 text-success border-success/20;
+  }
+  
+  .badge-choice {
+    @apply bg-gradient-to-r from-primary to-secondary text-white;
+  }
+  
+  .badge-premium {
+    @apply bg-warning/10 text-warning border-warning/20;
+  }
+
+  /* Typography */
+  .text-display {
+    @apply font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight;
+  }
+  
+  .text-headline {
+    @apply font-display text-2xl md:text-3xl font-semibold leading-tight;
+  }
+  
+  .text-subheadline {
+    @apply text-lg md:text-xl text-muted-foreground leading-relaxed;
+  }
+
+  /* Gradients */
+  .bg-hero-gradient {
+    background: var(--gradient-hero);
+  }
+  
+  .bg-primary-gradient {
+    background: var(--gradient-primary);
+  }
+  
+  .bg-card-gradient {
+    background: var(--gradient-card);
+  }
+
+  /* Scrollbar Hide */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
